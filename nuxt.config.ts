@@ -21,5 +21,20 @@ export default defineNuxtConfig({
   },
   devtools: {
     enabled: true
+  },
+  runtimeConfig: {
+    session: {
+      password: ''
+    },
+    oauth: {
+      github : {
+        clientId: '',
+        clientSecret: ''
+      }
+    },
+    hub: {
+      projectKey: '',
+      env: ''
+    }
   }
 })
