@@ -19,9 +19,7 @@ export default defineNuxtConfig({
     enabled: true,
   },
   runtimeConfig: {
-    replicate: {
-      token: process.env.NUXT_REPLICATE_TOKEN,
-    },
+    replicateToken: process.env.NUXT_REPLICATE_TOKEN,
     session: {
       password: process.env.NUXT_SESSION_PASSWORD,
     },

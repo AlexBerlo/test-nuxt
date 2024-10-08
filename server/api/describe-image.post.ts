@@ -6,6 +6,7 @@ import fs from 'fs';
 export default defineEventHandler(async (event) => {
   try {
     // Parse the multipart form data
+    const { replicateToken } = useRuntimeConfig();
     const { fields, files } = await readFiles(event);
 
     // Check if an image file was uploaded
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
     const prompt = fields.prompt?.[0] || 'Describe this image in detail.Focus on the characters, objects, and actions.';
 
     const replicate = new Replicate({
-      auth: process.env.NUXT_REPLICATE_TOKEN,
+      auth: replicateToken,
     });
 
     // Read the image file as a base64 string

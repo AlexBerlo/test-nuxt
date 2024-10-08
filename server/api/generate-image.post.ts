@@ -4,6 +4,8 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
     const { prompt } = body;
+    const { replicateToken } = useRuntimeConfig();
+    console.log(replicateToken);
 
     if (!prompt) {
       throw createError({
@@ -13,7 +15,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const replicate = new Replicate({
-      auth: process.env.NUXT_REPLICATE_TOKEN,
+      auth: replicateToken,
     });
 
     // const input = {
