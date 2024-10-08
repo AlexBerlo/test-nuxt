@@ -16,13 +16,20 @@ const { loggedIn } = useUserSession()
         color="black"
         external
       />
-      <UButton
-        v-else
-        to="/todos"
-        icon="i-heroicons-list-bullet"
-        label="Go to Todos"
-        color="black"
-      />
+      <template v-else>
+        <UButton
+          to="/todos"
+          icon="i-heroicons-list-bullet"
+          label="Go to Todos"
+          color="black"
+        />
+        <UButton
+          to="/generate-image"
+          icon="i-heroicons-list-bullet"
+          label="Go to Image gen"
+          color="black"
+        />
+        </template>
     </template>
     <p class="font-medium">
       Welcome to Atidone.
