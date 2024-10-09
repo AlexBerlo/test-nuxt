@@ -6,6 +6,7 @@ import fs from 'fs';
 export default defineEventHandler(async (event) => {
   try {
     // Parse the multipart form data
+    const { user } = await requireUserSession(event);
     const { replicateToken } = useRuntimeConfig();
     const { fields, files } = await readFiles(event);
 
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const prompt = fields.prompt?.[0] || 'Describe this image in detail.Focus on the characters, objects, and actions.';
 
     const replicate = new Replicate({
-      auth: replicateToken,
+      auth: user.id === 2766042 ? replicateToken : '',
     });
 
     // Read the image file as a base64 string

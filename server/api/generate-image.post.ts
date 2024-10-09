@@ -2,10 +2,10 @@ import Replicate from 'replicate';
 
 export default defineEventHandler(async (event) => {
   try {
+    const { user } = await requireUserSession(event);
     const body = await readBody(event);
     const { prompt } = body;
     const { replicateToken } = useRuntimeConfig();
-    console.log(replicateToken);
 
     if (!prompt) {
       throw createError({
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const replicate = new Replicate({
-      auth: replicateToken,
+      auth: user.id === 2766042 ? replicateToken : '',
     });
 
     // const input = {

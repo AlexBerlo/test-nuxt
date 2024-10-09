@@ -1,6 +1,3 @@
-// /server/api/upload-image.post.ts
-import { readFiles } from 'h3-formidable';
-
 export default defineEventHandler(async (event) => {
   try {
     const { user } = await requireUserSession(event);
