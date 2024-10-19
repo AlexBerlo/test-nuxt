@@ -18,6 +18,11 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+  // $development: {
+  //   hub: {
+  //     remote: true,
+  //   },
+  // },
   runtimeConfig: {
     replicateToken: process.env.NUXT_REPLICATE_TOKEN,
     session: {
