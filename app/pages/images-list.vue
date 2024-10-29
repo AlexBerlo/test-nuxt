@@ -31,7 +31,7 @@ async function loadMore() {
 }
 
 function drawingTitle(drawing: BlobObject) {
-  const title = drawing.customMetadata?.description || 'no description'
+  const title = drawing.customMetadata?.description || 'no description available'
   if (!drawing.customMetadata?.aiImage) {
     return title + '\n[AI image could not be generated]'
   }
