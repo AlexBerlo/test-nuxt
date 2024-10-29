@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     const name = `${new Date('2050-01-01').getTime() - Date.now()}`;
 
     const result = await hubBlob().put(`${name}.webp`, image, {
-      prefix: 'generated-image',
+      prefix: `generated-image_${user.id}`,
       addRandomSuffix: true,
       customMetadata: {
         userId: user.id.toString(),

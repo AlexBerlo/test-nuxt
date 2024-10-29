@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const replicate = new Replicate({
-      auth: user.id === 2766042 ? replicateToken : '',
+      auth: user.id === 2766042 || user.id === 153495995 ? replicateToken : '',
     });
 
     // const input = {

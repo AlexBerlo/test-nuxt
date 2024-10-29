@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const prompt = fields.prompt?.[0] || 'Describe this image in detail.Focus on the characters, objects, and actions.';
 
     const replicate = new Replicate({
-      auth: user.id === 2766042 ? replicateToken : '',
+      auth: user.id === 2766042 || user.id === 153495995 ? replicateToken : '',
     });
 
     // Read the image file as a base64 string

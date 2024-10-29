@@ -89,6 +89,9 @@ const saveImage = async () => {
 
 <template>
   <div class="container mx-auto px-4 py-8">
+    <div class="mb-4">
+      <UButton to="/" icon="i-heroicons-arrow-left" color="gray" variant="ghost" />
+    </div>
     <h1 class="text-2xl font-bold mb-6">Image Generator</h1>
     <UCard>
       <div class="image-generator">

@@ -12,6 +12,7 @@ const { loggedIn } = useUserSession()
         color="black" external />
       <template v-else>
         <UButton to="/todos" icon="i-heroicons-list-bullet" label="Go to Todos" color="black" />
+        <UButton to="/images-list" icon="i-heroicons-list-bullet" label="Go to Image list" color="black" />
         <UButton to="/generate-image" icon="i-heroicons-list-bullet" label="Go to Image gen" color="black" />
       </template>
     </template>
