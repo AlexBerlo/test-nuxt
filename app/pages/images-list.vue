@@ -31,7 +31,7 @@ async function loadMore() {
 }
 
 function drawingTitle(drawing: BlobObject) {
-  const title = drawing.customMetadata?.description || ''
+  const title = drawing.customMetadata?.description || 'no description'
   if (!drawing.customMetadata?.aiImage) {
     return title + '\n[AI image could not be generated]'
   }
@@ -44,7 +44,7 @@ function drawingTitle(drawing: BlobObject) {
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 ">
       <div v-for="drawing in data?.blobs" :key="drawing.pathname" class="flex flex-col gap-2">
         <div class="group relative max-w-[400px]" :title="drawingTitle(drawing as any)">
-          <img :src="`${drawing.pathname}`" :alt="drawing.customMetadata?.description || drawing.pathname"
+          <img :src="`/test-nuxt/${drawing.pathname}`" :alt="drawing.customMetadata?.description || drawing.pathname"
             class="w-full rounded aspect-1" loading="lazy">
         </div>
         <div class="flex items-center justify-between max-w-[400px]">
