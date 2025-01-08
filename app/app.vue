@@ -29,38 +29,27 @@ useSeoMeta({
 </script>
 
 <template>
-  <UContainer class="min-h-screen flex flex-col justify-center">
-    <div class="mb-2 text-right">
-      <UButton
-        square
-        variant="ghost"
-        color="black"
-        :icon="$colorMode.preference === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'"
-        @click="toggleColorMode"
-      />
-    </div>
+  <UApp>
+    <UContainer class="min-h-screen flex flex-col justify-center">
+      <div class="mb-2 text-right">
+        <UButton square variant="ghost" color="black"
+          :icon="$colorMode.preference === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'" @click="toggleColorMode" />
+      </div>
 
-    <NuxtPage />
+      <NuxtPage />
 
-    <footer class="text-center mt-2">
-      <NuxtLink
-        href="https://github.com/atinux/atidone"
-        target="_blank"
-        class="text-sm text-gray-500 hover:text-gray-700"
-      >
-        GitHub
-      </NuxtLink>
-      ·
-      <NuxtLink
-        href="https://twitter.com/atinux"
-        target="_blank"
-        class="text-sm text-gray-500 hover:text-gray-700"
-      >
-        Twitter
-      </NuxtLink>
-    </footer>
-  </UContainer>
-  <UNotifications />
+      <footer class="text-center mt-2">
+        <NuxtLink href="https://github.com/atinux/atidone" target="_blank"
+          class="text-sm text-gray-500 hover:text-gray-700">
+          GitHub
+        </NuxtLink>
+        ·
+        <NuxtLink href="https://twitter.com/atinux" target="_blank" class="text-sm text-gray-500 hover:text-gray-700">
+          Twitter
+        </NuxtLink>
+      </footer>
+    </UContainer>
+  </UApp>
 </template>
 
 <style lang="postcss">

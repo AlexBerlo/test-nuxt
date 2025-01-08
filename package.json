@@ -11,11 +11,10 @@
   "dependencies": {
     "@iconify-json/simple-icons": "^1.2.8",
     "@nuxt/eslint": "^0.6.0",
-    "@nuxt/ui": "^2.18.7",
+    "@nuxt/ui": "^3.0.0-alpha.10",
     "@nuxthub/core": "^0.7.33",
     "@vueuse/components": "^11.1.0",
     "@vueuse/core": "^11.1.0",
-    "components": "link:@vueuse/ueuse/components",
     "drizzle-kit": "^0.26.2",
     "drizzle-orm": "0.35.1",
     "h3-formidable": "^1.0.0",

@@ -2,6 +2,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-07-30',
   future: { compatibilityVersion: 4 },
   modules: ['@nuxthub/core', '@nuxt/ui', 'nuxt-auth-utils', '@nuxt/eslint'],
+  css: ['~/assets/css/main.css'],
   hub: {
     database: true,
     blob: true,

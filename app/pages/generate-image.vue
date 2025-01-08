@@ -82,7 +82,6 @@ const saveImage = async () => {
       method: 'POST',
       body: formData,
     })
-    console.log(uploadResponse);
   }
 }
 </script>
