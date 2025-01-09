@@ -1,12 +1,21 @@
 export default defineNuxtConfig({
+  /**
+   * why below throws ts error ??
+   */
+  // images: {
+  //   cloudflare: {
+  //     baseURL: 'https://that-test.site',
+  //   },
+  // },
   compatibilityDate: '2024-07-30',
   future: { compatibilityVersion: 4 },
-  modules: ['@nuxthub/core', '@nuxt/ui', 'nuxt-auth-utils', '@nuxt/eslint'],
+  modules: ['@nuxthub/core', '@nuxt/ui', 'nuxt-auth-utils', '@nuxt/eslint', '@nuxt/image'],
   css: ['~/assets/css/main.css'],
   hub: {
     database: true,
     blob: true,
   },
+
   // Development config
   eslint: {
     config: {

@@ -9,11 +9,11 @@ const { loggedIn } = useUserSession()
         Todo List
       </h3>
       <UButton v-if="!loggedIn" to="/api/auth/github" icon="i-simple-icons-github" label="Login with GitHub"
-        color="black" external />
+         external />
       <template v-else>
-        <UButton to="/todos" icon="i-heroicons-list-bullet" label="Go to Todos" color="black" />
-        <UButton to="/images-list" icon="i-heroicons-list-bullet" label="Go to Image list" color="black" />
-        <UButton to="/generate-image" icon="i-heroicons-list-bullet" label="Go to Image gen" color="black" />
+        <UButton to="/todos" icon="i-heroicons-list-bullet" label="Go to Todos"  />
+        <UButton to="/images-list" icon="i-heroicons-list-bullet" label="Go to Image list"  />
+        <UButton to="/generate-image" icon="i-heroicons-list-bullet" label="Go to Image gen"  />
       </template>
     </template>
     <p class="font-medium">

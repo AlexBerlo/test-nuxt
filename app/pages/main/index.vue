@@ -14,6 +14,7 @@ const goToNewStory = () => {
         <UButton icon="i-heroicons-plus" color="primary" variant="solid" @click="goToNewStory"
           aria-label="Add new story" />
       </div>
+      <NuxtLayout page-key="static" />
     </UContainer>
   </div>
 </template>
