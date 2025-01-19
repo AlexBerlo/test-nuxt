@@ -35,9 +35,7 @@ useSeoMeta({
         <UButton square variant="ghost" color="black"
           :icon="$colorMode.preference === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'" @click="toggleColorMode" />
       </div>
-
       <NuxtPage />
-
       <footer class="text-center mt-2">
         footer
       </footer>

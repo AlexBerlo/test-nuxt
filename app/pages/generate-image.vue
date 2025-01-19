@@ -6,6 +6,7 @@ const uploadedImage = ref<File | null>(null)
 const imageDescription = ref('')
 const imageGenerationLoading = ref(false);
 const imageDescriptionLoading = ref(false);
+const detectedImages = ref<string[]>([]);
 
 async function generateImage() {
   imageGenerationLoading.value = true;
@@ -84,12 +85,45 @@ const saveImage = async () => {
     })
   }
 }
+
+const detectObjectsInImage = async () => {
+  if (generatedImage.value) {
+    try {
+      const response = await fetch(generatedImage.value);
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const imageBlob = await response.blob();
+      const base64Image = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(imageBlob);
+      });
+
+      const detectResponse = await fetch('/api/detect-objects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: base64Image }),
+      });
+
+      if (!detectResponse.ok) throw new Error('Failed to detect objects');
+
+      const result = await detectResponse.json();
+      detectedImages.value = result.extracted_images;
+      console.log('Detected objects:', result);
+      // Handle the result as needed (e.g., display detected objects)
+    } catch (error) {
+      console.error('Error detecting objects:', error);
+    }
+  }
+}
 </script>
 
 <template>
   <div class="container mx-auto px-4 py-8">
     <div class="mb-4">
-      <UButton to="/" icon="i-heroicons-arrow-left" color="gray" variant="ghost" />
+      <UButton to="/" icon="i-heroicons-arrow-left" variant="ghost" />
     </div>
     <h1 class="text-2xl font-bold mb-6">Image Generator</h1>
     <UCard>
@@ -99,10 +133,15 @@ const saveImage = async () => {
           <UInput v-model="prompt" placeholder="Enter image description" class="flex-grow" />
           <UButton @click="generateImage" label="Generate" color="primary" />
           <UButton @click="saveImage" label="Save" color="primary" :disabled="!generatedImage" />
+          <UButton @click="detectObjectsInImage" label="Detect objects" color="primary" :disabled="!generatedImage" />
         </div>
         <UProgress v-if="!generatedImage && imageGenerationLoading" animation="carousel" />
         <div v-else-if="generatedImage" class="mt-4">
           <img :src="generatedImage" alt="Generated Image" class="max-w-full h-auto">
+        </div>
+        <div v-if="detectedImages.length" class="mt-4">
+          <img v-for="image in detectedImages" :key="image" :src="`data:image/png;base64,${image}`" alt="Detected Image"
+            class="max-w-full h-auto">
         </div>
       </div>
     </UCard>
