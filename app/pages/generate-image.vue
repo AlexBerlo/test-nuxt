@@ -99,7 +99,7 @@ const detectObjectsInImage = async () => {
         reader.readAsDataURL(imageBlob);
       });
 
-      const detectResponse = await fetch('/api/detect-objects', {
+      const detectResponse = await $fetch('/api/detect-objects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -107,11 +107,8 @@ const detectObjectsInImage = async () => {
         body: JSON.stringify({ image: base64Image }),
       });
 
-      if (!detectResponse.ok) throw new Error('Failed to detect objects');
-
-      const result = await detectResponse.json();
-      detectedImages.value = result.extracted_images;
-      console.log('Detected objects:', result);
+      detectedImages.value = detectResponse.extracted_images;
+      console.log('Detected objects:', detectResponse);
       // Handle the result as needed (e.g., display detected objects)
     } catch (error) {
       console.error('Error detecting objects:', error);
