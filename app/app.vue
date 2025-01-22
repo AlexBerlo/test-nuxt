@@ -1,21 +1,21 @@
 <script setup>
-const { loggedIn } = useUserSession()
-const colorMode = useColorMode()
+const { loggedIn } = useUserSession();
+const colorMode = useColorMode();
 
 watch(loggedIn, () => {
   if (!loggedIn.value) {
-    navigateTo('/')
+    navigateTo('/');
   }
-})
+});
 
 function toggleColorMode() {
-  colorMode.preference = colorMode.preference === 'dark' ? 'light' : 'dark'
+  colorMode.preference = colorMode.preference === 'dark' ? 'light' : 'dark';
 }
 
 useHead({
   htmlAttrs: { lang: 'en' },
-  link: [{ rel: 'icon', href: '/icon.png' }]
-})
+  link: [{ rel: 'icon', href: '/icon.png' }],
+});
 
 useSeoMeta({
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
@@ -24,16 +24,18 @@ useSeoMeta({
     'A Nuxt demo hosted with edge-side rendering, authentication and queyring a Cloudflare D1 database',
   ogImage: '/social-image.png',
   twitterImage: '/social-image.png',
-  twitterCard: 'summary_large_image'
-})
+  twitterCard: 'summary_large_image',
+});
 </script>
 
 <template>
   <UApp>
     <UContainer class="min-h-screen flex flex-col justify-center">
       <div class="mb-2 text-right">
-        <UButton square variant="ghost" color="black"
-          :icon="$colorMode.preference === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'" @click="toggleColorMode" />
+        <UButton
+          square variant="ghost" color="black"
+          :icon="$colorMode.preference === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'" @click="toggleColorMode"
+        />
       </div>
       <NuxtPage />
       <footer class="text-center mt-2">

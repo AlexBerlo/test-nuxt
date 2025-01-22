@@ -19,7 +19,8 @@ export default defineEventHandler(async (event) => {
       filePath: result.pathname,
       metaData: result.customMetadata,
     };
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error uploading image:', error);
     throw createError({
       statusCode: (error as any).statusCode || 500,

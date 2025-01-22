@@ -14,7 +14,8 @@ export default defineEventHandler(async (event) => {
     return {
       blobs,
     };
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error fetching images:', error);
     throw createError({
       statusCode: (error as any).statusCode || 500,

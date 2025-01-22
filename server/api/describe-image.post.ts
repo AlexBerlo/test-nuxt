@@ -1,7 +1,7 @@
+import fs from 'node:fs';
+import { readFiles } from 'h3-formidable';
 // /server/api/describe-image.post.ts
 import Replicate from 'replicate';
-import { readFiles } from 'h3-formidable';
-import fs from 'fs';
 
 export default defineEventHandler(async (event) => {
   try {
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
 
     const input = {
       image: `data:${imageFile.mimetype};base64,${base64Image}`,
-      prompt: prompt,
+      prompt,
     };
 
     let fullResponse = '';
@@ -55,7 +55,8 @@ export default defineEventHandler(async (event) => {
     fs.unlinkSync(imagePath);
 
     return { description: fullResponse.trim() };
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error describing image:', error);
     throw createError({
       statusCode: (error as any).statusCode || 500,

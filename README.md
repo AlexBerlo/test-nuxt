@@ -27,6 +27,7 @@ pnpm i
 ```
 
 Create a [GitHub Oauth Application](https://github.com/settings/applications/new) with:
+
 - Homepage url: `http://localhost:3000`
 - Callback url: `http://localhost:3000/api/auth/github`
 
@@ -68,7 +69,7 @@ It's also possible to leverage Cloudflare Pages CI for deploying, learn more abo
 ## Remote Storage
 
 Once you deployed your project, you can connect to your remote database locally running:
-  
+
 ```bash
 pnpm dev --remote
 ```

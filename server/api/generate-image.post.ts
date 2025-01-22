@@ -50,7 +50,8 @@ export default defineEventHandler(async (event) => {
     const imageUrl = output;
 
     return { imageUrl };
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error generating image:', error);
     throw createError({
       statusCode: (error as any).statusCode || 500,
