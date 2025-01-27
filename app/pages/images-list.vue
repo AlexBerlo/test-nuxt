@@ -2,7 +2,6 @@
 import type { BlobObject } from '@nuxthub/core';
 import { UseTimeAgo, vInfiniteScroll } from '@vueuse/components';
 
-const { user } = useUserSession();
 const { data } = await useFetch('/api/generate-image', {
   // don't return a shallowRef as we mutate the array
   deep: true,

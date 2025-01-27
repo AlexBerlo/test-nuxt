@@ -25,6 +25,8 @@ export default defineNuxtConfig({
 
   // Development config
   eslint: {
+    checker: {
+    },
     config: {
       stylistic: {
         quotes: 'single',
