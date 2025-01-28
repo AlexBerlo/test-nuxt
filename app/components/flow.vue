@@ -4,6 +4,12 @@ import { VueFlow, Panel } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
+import SceneNode from './nodes/scene-node.vue'
+import { markRaw } from 'vue';
+
+const nodeTypes = {
+  'scene-node': markRaw(SceneNode),
+}
 
 const nodes = ref([
   {
@@ -88,16 +94,16 @@ const addNode = () => {
   const id = Date.now().toString();
   nodes.value.push({
     id: id,
-    data: { label: 'child node' },
-    position: { x: 1, y: 2 },
-    parentNode: '4',
+    type: 'scene-node', // Add this line to use the custom node type
+    data: { label: 'Scene Node' },
+    position: { x: 100, y: 100 },
   })
 };
 </script>
 
 <template>
   <div class="container h-300 w-500 border-amber-400 border-2">
-    <VueFlow :nodes="nodes" :edges="edges" fit-view-on-init elevate-edges-on-select>
+    <VueFlow :nodes="nodes" :edges="edges" fit-view-on-init elevate-edges-on-select :node-types="nodeTypes">
       <Panel>
           <button type="button" @click="addNode">
             Add a node
