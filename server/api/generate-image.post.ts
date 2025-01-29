@@ -36,8 +36,8 @@ export default defineEventHandler(async (event) => {
       disableSafetyChecker: true,
     };
 
+    const output = await replicate.run('black-forest-labs/flux-1.1-pro', { input });
     // const output = await replicate.run('black-forest-labs/flux-1.1-pro', { input });
-    const output = await replicate.run('black-forest-labs/flux-schnell', { input });
 
     if (!output || !(output as any).length) {
       throw createError({
