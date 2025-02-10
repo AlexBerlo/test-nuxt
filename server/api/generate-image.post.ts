@@ -10,12 +10,12 @@ export default defineEventHandler(async (event) => {
     if (!prompt) {
       throw createError({
         statusCode: 400,
-        message: 'Prompt is required',
+        message: 'Prompt is required'
       });
     }
 
     const replicate = new Replicate({
-      auth: user.id === 2766042 || user.id === 153495995 ? replicateToken : '',
+      auth: user.id === 2766042 || user.id === 153495995 ? replicateToken : ''
     });
 
     // const input = {
@@ -33,16 +33,16 @@ export default defineEventHandler(async (event) => {
       output_format: 'webp',
       output_quality: 80,
       num_inference_steps: 4,
-      disableSafetyChecker: true,
+      disableSafetyChecker: true
     };
 
     const output = await replicate.run('black-forest-labs/flux-1.1-pro', { input });
     // const output = await replicate.run('black-forest-labs/flux-1.1-pro', { input });
 
-    if (!output || !(output as any).length) {
+    if (!output) {
       throw createError({
         statusCode: 500,
-        message: 'Failed to generate image',
+        message: 'Failed to generate image'
       });
     }
 
@@ -54,8 +54,8 @@ export default defineEventHandler(async (event) => {
   catch (error) {
     console.error('Error generating image:', error);
     throw createError({
-      statusCode: (error as any).statusCode || 500,
-      message: (error as any).message || 'An error occurred while generating the image',
+      statusCode: 500,
+      message: 'An error occurred while generating the image'
     });
   }
 });

@@ -5,6 +5,6 @@ export { and, eq, or, sql } from 'drizzle-orm';
 
 export const tables = schema;
 
-export function useDB() {
+export const useDB = () => {
   return drizzle(hubDatabase(), { schema });
-}
+};

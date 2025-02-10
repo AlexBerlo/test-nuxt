@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const router = useRouter();
 
-function goToNewStory() {
+const goToNewStory = () => {
   router.push('/main/new');
-}
+};
 </script>
 
 <template>
@@ -14,7 +14,10 @@ function goToNewStory() {
           My Stories
         </h1>
         <UButton
-          icon="i-heroicons-plus" color="primary" variant="solid" aria-label="Add new story"
+          icon="i-heroicons-plus"
+          color="primary"
+          variant="solid"
+          aria-label="Add new story"
           @click="goToNewStory"
         />
       </div>

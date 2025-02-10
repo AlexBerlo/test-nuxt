@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import Flow from '~/components/flow.vue';
-
-const asd = ref()
+import MainFlow from '~/components/main-flow.vue';
 </script>
 
 <template>
   <UContainer>
-    <ClientOnly fallback-tag="span" fallback="Loading flow...">
-      <Flow />
+    <ClientOnly
+      fallback-tag="span"
+      fallback="Loading flow..."
+    >
+      <MainFlow />
     </ClientOnly>
   </UContainer>
 </template>

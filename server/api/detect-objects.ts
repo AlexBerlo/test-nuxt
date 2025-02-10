@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
     const response = await fetch('http://localhost:5000/upload', {
       method: 'POST',
-      body: formData,
+      body: formData
     });
 
     if (!response.ok) {

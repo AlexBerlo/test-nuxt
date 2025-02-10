@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     if (!files.image || files.image.length === 0) {
       throw createError({
         statusCode: 400,
-        message: 'No image file uploaded',
+        message: 'No image file uploaded'
       });
     }
 
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const prompt = fields.prompt?.[0] || 'Describe this image in detail.Focus on the characters, objects, and actions.';
 
     const replicate = new Replicate({
-      auth: user.id === 2766042 || user.id === 153495995 ? replicateToken : '',
+      auth: user.id === 2766042 || user.id === 153495995 ? replicateToken : ''
     });
 
     // Read the image file as a base64 string
@@ -34,12 +34,12 @@ export default defineEventHandler(async (event) => {
 
     const input = {
       image: `data:${imageFile.mimetype};base64,${base64Image}`,
-      prompt,
+      prompt
     };
 
     let fullResponse = '';
     for await (const event of replicate.stream('yorickvp/llava-13b:80537f9eead1a5bfa72d5ac6ea6414379be41d4d4f6679fd776e9535d1eb58bb', {
-      input,
+      input
     })) {
       fullResponse += event;
     }
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
     if (!fullResponse) {
       throw createError({
         statusCode: 500,
-        message: 'Failed to generate image description',
+        message: 'Failed to generate image description'
       });
     }
 
@@ -58,9 +58,5 @@ export default defineEventHandler(async (event) => {
   }
   catch (error) {
     console.error('Error describing image:', error);
-    throw createError({
-      statusCode: (error as any).statusCode || 500,
-      message: (error as any).message || 'An error occurred while describing the image',
-    });
   }
 });

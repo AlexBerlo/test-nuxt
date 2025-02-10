@@ -8,20 +8,20 @@ const imageGenerationLoading = ref(false);
 const imageDescriptionLoading = ref(false);
 const detectedImages = ref<string[]>([]);
 
-async function generateImage() {
+const generateImage = async () => {
   imageGenerationLoading.value = true;
   try {
     const response = await fetch('/api/generate-image', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ prompt: prompt.value }),
+      body: JSON.stringify({ prompt: prompt.value })
     });
 
     if (response.ok) {
       const data = await response.json();
-      generatedImage.value = (data as any).imageUrl;
+      generatedImage.value = data.imageUrl;
     }
     else {
       console.error('Failed to generate image');
@@ -33,9 +33,9 @@ async function generateImage() {
   finally {
     imageGenerationLoading.value = false;
   }
-}
+};
 
-async function describeImage() {
+const describeImage = async () => {
   imageDescriptionLoading.value = true;
   if (!uploadedImage.value) {
     console.error('No image selected');
@@ -49,12 +49,12 @@ async function describeImage() {
   try {
     const response = await fetch('/api/describe-image', {
       method: 'POST',
-      body: formData,
+      body: formData
     });
 
     if (response.ok) {
       const data = await response.json();
-      imageDescription.value = (data as any).description;
+      imageDescription.value = data.description;
     }
     else {
       console.error('Failed to describe image');
@@ -66,16 +66,16 @@ async function describeImage() {
   finally {
     imageDescriptionLoading.value = false;
   }
-}
+};
 
-function handleFileUpload(event: Event) {
+const handleFileUpload = (event: Event) => {
   const files = event as unknown as FileList;
-  if (files.length) {
-    (uploadedImage as any).value = files[0];
+  if (files.length && files[0]) {
+    uploadedImage.value = files[0];
   }
-}
+};
 
-async function saveImage() {
+const saveImage = async () => {
   if (generatedImage.value) {
     const response = await fetch(generatedImage.value);
     if (!response.ok)
@@ -88,12 +88,12 @@ async function saveImage() {
 
     await fetch('/api/upload-image', {
       method: 'POST',
-      body: formData,
+      body: formData
     });
   }
-}
+};
 
-async function detectObjectsInImage() {
+const detectObjectsInImage = async () => {
   if (generatedImage.value) {
     try {
       const response = await fetch(generatedImage.value);
@@ -110,9 +110,9 @@ async function detectObjectsInImage() {
       const detectResponse = await $fetch('/api/detect-objects', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ image: base64Image }),
+        body: JSON.stringify({ image: base64Image })
       });
 
       detectedImages.value = detectResponse.extracted_images;
@@ -123,13 +123,17 @@ async function detectObjectsInImage() {
       console.error('Error detecting objects:', error);
     }
   }
-}
+};
 </script>
 
 <template>
   <div class="container mx-auto px-4 py-8">
     <div class="mb-4">
-      <UButton to="/" icon="i-heroicons-arrow-left" variant="ghost" />
+      <UButton
+        to="/"
+        icon="i-heroicons-arrow-left"
+        variant="ghost"
+      />
     </div>
     <h1 class="text-2xl font-bold mb-6">
       Image Generator
@@ -140,18 +144,52 @@ async function detectObjectsInImage() {
           Enter a description, and we'll generate an image for you!
         </p>
         <div class="flex items-center space-x-2 mb-4">
-          <UInput v-model="prompt" placeholder="Enter image description" class="flex-grow" />
-          <UButton label="Generate" color="primary" @click="generateImage" />
-          <UButton label="Save" color="primary" :disabled="!generatedImage" @click="saveImage" />
-          <UButton label="Detect objects" color="primary" :disabled="!generatedImage" @click="detectObjectsInImage" />
+          <UInput
+            v-model="prompt"
+            placeholder="Enter image description"
+            class="flex-grow"
+          />
+          <UButton
+            label="Generate"
+            color="primary"
+            @click="generateImage"
+          />
+          <UButton
+            label="Save"
+            color="primary"
+            :disabled="!generatedImage"
+            @click="saveImage"
+          />
+          <UButton
+            label="Detect objects"
+            color="primary"
+            :disabled="!generatedImage"
+            @click="detectObjectsInImage"
+          />
         </div>
-        <UProgress v-if="!generatedImage && imageGenerationLoading" animation="carousel" />
-        <div v-else-if="generatedImage" class="mt-4">
-          <img :src="generatedImage" alt="Generated Image" class="max-w-full h-auto">
-        </div>
-        <div v-if="detectedImages.length" class="mt-4">
+        <UProgress
+          v-if="!generatedImage && imageGenerationLoading"
+          animation="carousel"
+        />
+        <div
+          v-else-if="generatedImage"
+          class="mt-4"
+        >
           <img
-            v-for="image in detectedImages" :key="image" :src="`data:image/png;base64,${image}`" alt="Detected Image"
+            :src="generatedImage"
+            alt="Generated Image"
+            class="max-w-full h-auto"
+          >
+        </div>
+        <div
+          v-if="detectedImages.length"
+          class="mt-4"
+        >
+          <img
+            v-for="image in detectedImages"
+            :key="image"
+            :src="`data:image/png;base64,${image}`"
+            alt="Detected Image"
             class="max-w-full h-auto"
           >
         </div>
@@ -163,11 +201,27 @@ async function detectObjectsInImage() {
           Upload an image, and we'll describe it for you!
         </p>
         <div class="flex items-center space-x-2 mb-4">
-          <UInput type="file" accept="image/*" class="flex-grow" @change="handleFileUpload" />
-          <UButton label="Describe" color="primary" :disabled="!uploadedImage" @click="describeImage" />
+          <UInput
+            type="file"
+            accept="image/*"
+            class="flex-grow"
+            @change="handleFileUpload"
+          />
+          <UButton
+            label="Describe"
+            color="primary"
+            :disabled="!uploadedImage"
+            @click="describeImage"
+          />
         </div>
-        <UProgress v-if="!imageDescription && imageDescriptionLoading" animation="carousel" />
-        <div v-else-if="imageDescription" class="mt-4">
+        <UProgress
+          v-if="!imageDescription && imageDescriptionLoading"
+          animation="carousel"
+        />
+        <div
+          v-else-if="imageDescription"
+          class="mt-4"
+        >
           <h2 class="text-xl font-semibold mb-2">
             Image Description:
           </h2>

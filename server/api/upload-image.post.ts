@@ -10,21 +10,17 @@ export default defineEventHandler(async (event) => {
       prefix: `generated-image_${user.id}`,
       addRandomSuffix: true,
       customMetadata: {
-        userId: user.id.toString(),
-      },
+        userId: user.id.toString()
+      }
     });
 
     return {
       success: true,
       filePath: result.pathname,
-      metaData: result.customMetadata,
+      metaData: result.customMetadata
     };
   }
   catch (error) {
     console.error('Error uploading image:', error);
-    throw createError({
-      statusCode: (error as any).statusCode || 500,
-      message: (error as any).message || 'An error occurred while uploading the image',
-    });
   }
 });

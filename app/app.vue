@@ -8,13 +8,13 @@ watch(loggedIn, () => {
   }
 });
 
-function toggleColorMode() {
+const toggleColorMode = () => {
   colorMode.preference = colorMode.preference === 'dark' ? 'light' : 'dark';
-}
+};
 
 useHead({
   htmlAttrs: { lang: 'en' },
-  link: [{ rel: 'icon', href: '/icon.png' }],
+  link: [{ rel: 'icon', href: '/icon.png' }]
 });
 
 useSeoMeta({
@@ -24,7 +24,7 @@ useSeoMeta({
     'A Nuxt demo hosted with edge-side rendering, authentication and queyring a Cloudflare D1 database',
   ogImage: '/social-image.png',
   twitterImage: '/social-image.png',
-  twitterCard: 'summary_large_image',
+  twitterCard: 'summary_large_image'
 });
 </script>
 
@@ -33,8 +33,11 @@ useSeoMeta({
     <UContainer class="min-h-screen flex flex-col justify-center">
       <div class="mb-2 text-right">
         <UButton
-          square variant="ghost" color="black"
-          :icon="$colorMode.preference === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'" @click="toggleColorMode"
+          square
+          variant="ghost"
+          color="black"
+          :icon="$colorMode.preference === 'dark' ? 'i-heroicons-moon' : 'i-heroicons-sun'"
+          @click="toggleColorMode"
         />
       </div>
       <NuxtPage />

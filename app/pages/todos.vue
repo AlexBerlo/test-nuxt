@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-  middleware: 'auth',
+  middleware: 'auth'
 });
 const loading = ref(false);
 const newTodo = ref('');
@@ -10,7 +10,7 @@ const toast = useToast();
 const { user, clear } = useUserSession();
 const { data: todos, refresh } = await useFetch('/api/todos');
 
-async function addTodo() {
+const addTodo = async () => {
   if (!newTodo.value.trim())
     return;
 
@@ -21,8 +21,8 @@ async function addTodo() {
       method: 'POST',
       body: {
         title: newTodo.value,
-        completed: 0,
-      },
+        completed: 0
+      }
     });
     todos.value.push(todo);
     await refresh();
@@ -39,30 +39,30 @@ async function addTodo() {
     }
   }
   loading.value = false;
-}
+};
 
-async function toggleTodo(todo) {
+const toggleTodo = async (todo) => {
   todo.completed = Number(!todo.completed);
   await $fetch(`/api/todos/${todo.id}`, {
     method: 'PATCH',
     body: {
-      completed: todo.completed,
-    },
+      completed: todo.completed
+    }
   });
   await refresh();
-}
+};
 
-async function deleteTodo(todo) {
+const deleteTodo = async (todo) => {
   await $fetch(`/api/todos/${todo.id}`, { method: 'DELETE' });
   todos.value = todos.value.filter(t => t.id !== todo.id);
   await refresh();
   toast.add({ title: `Todo "${todo.title}" deleted.` });
-}
+};
 
 const items = [[{
   label: 'Logout',
   icon: 'i-heroicons-arrow-left-on-rectangle',
-  click: clear,
+  click: clear
 }]];
 </script>
 
@@ -70,15 +70,30 @@ const items = [[{
   <UCard @submit.prevent="addTodo">
     <template #header>
       <div class="flex items-center gap-4">
-        <UButton to="/" icon="i-heroicons-arrow-left" color="gray" variant="ghost" />
+        <UButton
+          to="/"
+          icon="i-heroicons-arrow-left"
+          color="gray"
+          variant="ghost"
+        />
         <h3 class="text-lg font-semibold leading-6">
           Todo List
         </h3>
       </div>
 
-      <UDropdown v-if="user" :items="items">
-        <UButton color="white" trailing-icon="i-heroicons-chevron-down-20-solid">
-          <UAvatar :src="`https://github.com/${user.login}.png`" :alt="user.login" size="3xs" />
+      <UDropdown
+        v-if="user"
+        :items="items"
+      >
+        <UButton
+          color="white"
+          trailing-icon="i-heroicons-chevron-down-20-solid"
+        >
+          <UAvatar
+            :src="`https://github.com/${user.login}.png`"
+            :alt="user.login"
+            size="3xs"
+          />
           {{ user.login }}
         </UButton>
       </UDropdown>
@@ -86,24 +101,49 @@ const items = [[{
 
     <div class="flex items-center gap-2">
       <UInput
-        ref="newTodoInput" v-model="newTodo" name="todo" :disabled="loading" class="flex-1"
-        placeholder="Make a Nuxt demo" autocomplete="off" autofocus :ui="{ wrapper: 'flex-1' }"
+        ref="newTodoInput"
+        v-model="newTodo"
+        name="todo"
+        :disabled="loading"
+        class="flex-1"
+        placeholder="Make a Nuxt demo"
+        autocomplete="off"
+        autofocus
+        :ui="{ wrapper: 'flex-1' }"
       />
 
       <UButton
-        type="submit" icon="i-heroicons-plus-20-solid" :loading="loading"
+        type="submit"
+        icon="i-heroicons-plus-20-solid"
+        :loading="loading"
         :disabled="newTodo.trim().length === 0"
       />
     </div>
 
     <ul class="divide-y divide-gray-200 dark:divide-gray-800">
-      <li v-for="todo of todos" :key="todo.id" class="flex items-center gap-4 py-2">
-        <span class="flex-1 font-medium" :class="[todo.completed ? 'line-through text-gray-500' : '']">{{ todo.title
+      <li
+        v-for="todo of todos"
+        :key="todo.id"
+        class="flex items-center gap-4 py-2"
+      >
+        <span
+          class="flex-1 font-medium"
+          :class="[todo.completed ? 'line-through text-gray-500' : '']"
+        >{{ todo.title
         }}</span>
 
-        <UToggle :model-value="Boolean(todo.completed)" @update:model-value="toggleTodo(todo)" />
+        <UToggle
+          :model-value="Boolean(todo.completed)"
+          @update:model-value="toggleTodo(todo)"
+        />
 
-        <UButton color="red" variant="soft" size="2xs" icon="i-heroicons-x-mark-20-solid" @click="deleteTodo(todo)" />
+        <UButton
+          color="red"
+          variant="soft"
+          size="2xs"
+          icon="i-heroicons-x-mark-20-solid"
+          @click="deleteTodo(todo)"
+        />
       </li>
     </ul>
   </UCard>
