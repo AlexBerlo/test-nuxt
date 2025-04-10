@@ -81,9 +81,12 @@ const items = [[{
         </h3>
       </div>
 
-      <UDropdown
+      <UDropdownMenu
         v-if="user"
         :items="items"
+        :ui="{
+          content: 'w-48'
+        }"
       >
         <UButton
           color="white"
@@ -96,7 +99,7 @@ const items = [[{
           />
           {{ user.login }}
         </UButton>
-      </UDropdown>
+      </UDropdownMenu>
     </template>
 
     <div class="flex items-center gap-2">
@@ -132,7 +135,7 @@ const items = [[{
         >{{ todo.title
         }}</span>
 
-        <UToggle
+        <USwitch
           :model-value="Boolean(todo.completed)"
           @update:model-value="toggleTodo(todo)"
         />

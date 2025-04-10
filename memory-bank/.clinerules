@@ -1,0 +1,231 @@
+# Multivia Project Rules & Patterns
+
+## Code Organization
+
+### Component Structure
+1. **Scene Node Component**
+   ```vue
+   <template>
+     <!-- Node wrapper with Tailwind classes -->
+     <div class="rounded-lg shadow-md bg-white">
+       <!-- Image container with aspect ratio -->
+       <div class="relative aspect-video">
+       <!-- Progression options list -->
+       <div class="p-4 space-y-2">
+   ```
+
+2. **Flow Editor Layout**
+   ```vue
+   <template>
+     <!-- Main container with full viewport -->
+     <div class="h-screen w-full">
+       <!-- Toolbar with consistent spacing -->
+       <div class="p-4 border-b">
+       <!-- Canvas with proper overflow -->
+       <div class="h-[calc(100vh-4rem)] overflow-hidden">
+   ```
+
+### File Naming
+- Components: PascalCase (SceneNode.vue)
+- Pages: kebab-case (scene-editor.vue)
+- Utils: camelCase (imageUtils.ts)
+- Types: PascalCase (SceneNodeType.ts)
+
+## State Management
+
+### XState Patterns
+1. **Machine Structure**
+   ```typescript
+   {
+     id: 'story',
+     initial: 'viewing',
+     context: {
+       scenes: {},
+       currentScene: null
+     },
+     states: {
+       viewing: {},
+       transitioning: {},
+       completed: {}
+     }
+   }
+   ```
+
+2. **Event Naming**
+   - SCENE.SELECT
+   - OPTION.CHOOSE
+   - STORY.COMPLETE
+   - EDITOR.UPDATE
+
+## API Conventions
+
+### Endpoint Structure
+- GET /api/stories/:id - Fetch story
+- POST /api/stories - Create story
+- PUT /api/stories/:id - Update story
+- DELETE /api/stories/:id - Delete story
+
+### Response Format
+```typescript
+{
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+  };
+  meta?: {
+    total?: number;
+    page?: number;
+  };
+}
+```
+
+## Image Management
+
+### Storage Patterns
+1. **Path Structure**
+   ```
+   /stories/{storyId}/scenes/{sceneId}/image.{ext}
+   /stories/{storyId}/preview.{ext}
+   /users/{userId}/avatar.{ext}
+   ```
+
+2. **Image Processing**
+   - Thumbnails: 300x300
+   - Preview: 800x600
+   - Full: 1920x1080
+   - Format: WebP
+
+## Database Patterns
+
+### Query Optimization
+1. **Story Fetching**
+   ```sql
+   SELECT s.*, 
+          array_agg(c.*) as completions
+   FROM stories s
+   LEFT JOIN completions c ON c.story_id = s.id
+   WHERE s.creator_id = $1
+   GROUP BY s.id
+   ```
+
+2. **Analytics Aggregation**
+   ```sql
+   SELECT 
+     date_trunc('day', completed_at) as day,
+     count(*) as completions
+   FROM completions
+   WHERE story_id = $1
+   GROUP BY day
+   ORDER BY day DESC
+   ```
+
+## UI/UX Guidelines
+
+### Tailwind Utility Classes
+
+1. **Layout Patterns**
+   ```html
+   <!-- Container patterns -->
+   <div class="container mx-auto px-4">
+   <div class="max-w-7xl mx-auto">
+   
+   <!-- Flex patterns -->
+   <div class="flex items-center justify-between">
+   <div class="flex flex-col space-y-4">
+   
+   <!-- Grid patterns -->
+   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+   ```
+
+2. **Common Component Classes**
+   ```html
+   <!-- Buttons -->
+   <button class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+   
+   <!-- Cards -->
+   <div class="rounded-lg shadow-md bg-white p-4">
+   
+   <!-- Forms -->
+   <input class="w-full px-3 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500">
+   ```
+
+## Performance Rules
+
+### Image Loading
+1. Lazy load all images
+2. Use srcset for responsive images
+3. Preload next scene images
+4. Cache frequently accessed images
+
+### State Updates
+1. Debounce editor changes (300ms)
+2. Batch scene updates
+3. Optimize re-renders
+4. Use computed properties
+
+## Error Handling
+
+### API Errors
+```typescript
+enum ErrorCode {
+  INVALID_INPUT = 'INVALID_INPUT',
+  NOT_FOUND = 'NOT_FOUND',
+  UNAUTHORIZED = 'UNAUTHORIZED',
+  SERVER_ERROR = 'SERVER_ERROR'
+}
+```
+
+### User Messages
+- Clear, actionable error messages
+- Consistent error format
+- Include resolution steps
+- Log detailed errors
+
+## Testing Patterns
+
+### Component Tests
+```typescript
+describe('SceneNode', () => {
+  it('renders image with correct aspect ratio', () => {
+  it('handles progression option clicks', () => {
+  it('updates on state changes', () => {
+});
+```
+
+### Integration Tests
+```typescript
+describe('Story Creation', () => {
+  it('creates new story with scenes', () => {
+  it('handles image upload/generation', () => {
+  it('saves story state', () => {
+});
+```
+
+## Documentation Rules
+
+### Component Documentation
+```typescript
+/**
+ * Scene Node Component
+ * 
+ * @component
+ * @example
+ * <scene-node
+ *   :image="imageUrl"
+ *   :options="progressionOptions"
+ *   @option-selected="handleProgression"
+ * />
+ */
+```
+
+### API Documentation
+```typescript
+/**
+ * Create new story
+ * 
+ * @route POST /api/stories
+ * @param {StoryInput} input - Story creation input
+ * @returns {Promise<Story>} Created story
+ * @throws {ApiError} On validation/server error
+ */

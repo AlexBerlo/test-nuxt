@@ -1,25 +1,60 @@
 <script setup lang="ts">
+import type { ImageHotspot } from '../../../types/image';
+
 interface NodeData {
   label: string;
-  // Add any other properties that your node data might have
+  imageUrl?: string;
+  hotspots?: ImageHotspot[];
+  selectedHotspot?: ImageHotspot | null;
 }
 
 const props = defineProps<{
   id: string;
   data: NodeData;
+  isEditing?: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:data', data: NodeData): void;
 }>();
 
 const handleNodeClick = () => {
-  navigateTo(`/main/scene/${props.id}`);
+  if (!props.data.imageUrl) {
+    navigateTo(`/main/scene/${props.id}`);
+  }
+};
+
+const onHotspotSelect = (hotspot: ImageHotspot) => {
+  const updatedData = {
+    ...props.data,
+    selectedHotspot: hotspot
+  };
+  emit('update:data', updatedData);
 };
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow-md p-4 w-64">
+  <div class="bg-white rounded-lg shadow-md p-4 w-96">
     <h3 class="text-lg font-semibold mb-4">
-      Scene Node
+      {{ data.label || 'Scene Node' }}
     </h3>
-    <div class="flex flex-col items-center">
+
+    <div
+      v-if="data.imageUrl"
+      class="mb-4"
+    >
+      <ImageHotspots
+        :image-url="data.imageUrl"
+        :hotspots="data.hotspots || []"
+        :is-selectable="isEditing"
+        :selected-hotspot="data.selectedHotspot"
+        @select="onHotspotSelect"
+      />
+    </div>
+    <div
+      v-else
+      class="flex flex-col items-center"
+    >
       <UButton
         class="cursor-pointer mb-4 w-12 h-12 flex items-center justify-center"
         color="primary"
