@@ -32,11 +32,12 @@ export default defineEventHandler(async (event) => {
       aspect_ratio: '1:1',
       output_format: 'webp',
       output_quality: 80,
-      num_inference_steps: 4,
-      disableSafetyChecker: true
+      disableSafetyChecker: true,
+      lora_scale: 1,
+      lora_weights: 'fofr/flux-80s-cyberpunk'
     };
 
-    const output = await replicate.run('black-forest-labs/flux-1.1-pro', { input });
+    const output = await replicate.run('black-forest-labs/flux-dev-lora', { input });
     // const output = await replicate.run('black-forest-labs/flux-1.1-pro', { input });
 
     if (!output) {

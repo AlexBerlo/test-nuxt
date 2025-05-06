@@ -1,6 +1,7 @@
 <!-- pages/generate-image.vue -->
 <script setup lang="ts">
 const prompt = ref('');
+const maskPrompt = ref('');
 const generatedImage = ref('');
 const uploadedImage = ref<File | null>(null);
 const imageDescription = ref('');
@@ -9,6 +10,7 @@ const imageDescriptionLoading = ref(false);
 const detectedImages = ref<string[]>([]);
 
 const generateImage = async () => {
+  detectedImages.value = [];
   imageGenerationLoading.value = true;
   try {
     const response = await fetch('/api/generate-image', {
@@ -21,7 +23,7 @@ const generateImage = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      generatedImage.value = data.imageUrl;
+      generatedImage.value = data.imageUrl[0];
     }
     else {
       console.error('Failed to generate image');
@@ -96,26 +98,15 @@ const saveImage = async () => {
 const detectObjectsInImage = async () => {
   if (generatedImage.value) {
     try {
-      const response = await fetch(generatedImage.value);
-      if (!response.ok)
-        throw new Error('Network response was not ok');
-
-      const imageBlob = await response.blob();
-      const base64Image = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(imageBlob);
-      });
-
-      const detectResponse = await $fetch('/api/detect-objects', {
+      const detectResponse = await $fetch('/api/detect-objects-sam', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ image: base64Image })
+        body: { imageUrl: generatedImage.value, maskPrompt: maskPrompt.value }
       });
 
-      detectedImages.value = detectResponse.extracted_images;
+      detectedImages.value = detectResponse;
       console.log('Detected objects:', detectResponse);
       // Handle the result as needed (e.g., display detected objects)
     }
@@ -143,12 +134,13 @@ const detectObjectsInImage = async () => {
         <p class="mb-4">
           Enter a description, and we'll generate an image for you!
         </p>
+        <UTextarea
+          v-model="prompt"
+          :rows="3"
+          placeholder="Enter image description"
+          class="flex-grow mb-4 w-100"
+        />
         <div class="flex items-center space-x-2 mb-4">
-          <UInput
-            v-model="prompt"
-            placeholder="Enter image description"
-            class="flex-grow"
-          />
           <UButton
             label="Generate"
             color="primary"
@@ -163,8 +155,14 @@ const detectObjectsInImage = async () => {
           <UButton
             label="Detect objects"
             color="primary"
-            :disabled="!generatedImage"
+            :disabled="!generatedImage && !maskPrompt"
             @click="detectObjectsInImage"
+          />
+          <UInput
+            v-model="maskPrompt"
+            :disabled="!generatedImage"
+            placeholder="Enter object detection prompt"
+            class="flex-grow"
           />
         </div>
         <UProgress
@@ -182,16 +180,13 @@ const detectObjectsInImage = async () => {
           >
         </div>
         <div
-          v-if="detectedImages.length"
+          v-if="detectedImages.length && detectedImages[2]"
           class="mt-4"
         >
-          <img
-            v-for="image in detectedImages"
-            :key="image"
-            :src="`data:image/png;base64,${image}`"
-            alt="Detected Image"
-            class="max-w-full h-auto"
-          >
+          <image-hotspots
+            :image-url="generatedImage"
+            :mask-url="detectedImages[2]"
+          />
         </div>
       </div>
     </UCard>

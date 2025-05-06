@@ -4,8 +4,6 @@ import type { ImageHotspot } from '../../../types/image';
 interface NodeData {
   label: string;
   imageUrl?: string;
-  hotspots?: ImageHotspot[];
-  selectedHotspot?: ImageHotspot | null;
 }
 
 const props = defineProps<{
@@ -45,9 +43,7 @@ const onHotspotSelect = (hotspot: ImageHotspot) => {
     >
       <ImageHotspots
         :image-url="data.imageUrl"
-        :hotspots="data.hotspots || []"
         :is-selectable="isEditing"
-        :selected-hotspot="data.selectedHotspot"
         @select="onHotspotSelect"
       />
     </div>

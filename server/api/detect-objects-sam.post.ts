@@ -1,15 +1,5 @@
 import Replicate from 'replicate';
 
-interface SAMPrediction {
-  masks: string[];
-  bounds: Array<{
-    x0: number;
-    y0: number;
-    x1: number;
-    y1: number;
-  }>;
-}
-
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
   const { replicateToken } = useRuntimeConfig();
@@ -20,11 +10,15 @@ export default defineEventHandler(async (event) => {
 
   try {
     const body = await readBody(event);
-    const { imageUrl } = body;
+    console.log(body);
+    const { imageUrl, maskPrompt } = body;
 
     console.log(imageUrl);
+    console.log('imageUrl');
+    console.log('imageUrl');
+    console.log('imageUrl');
 
-    if (!imageUrl) {
+    if (!imageUrl && imageUrl.length) {
       throw createError({
         statusCode: 400,
         message: 'Image URL is required'
@@ -37,12 +31,12 @@ export default defineEventHandler(async (event) => {
       {
         input: {
           image: imageUrl,
-          mask_prompt: 'hat',
+          mask_prompt: maskPrompt,
           adjustment_factor: -15,
           negative_mask_prompt: ''
         }
       }
-    ) as unknown as SAMPrediction;
+    ) as unknown as string[];
     console.log(prediction);
 
     // const hotspots: ImageHotspot[] = prediction.masks.map((mask: string, index: number) => ({
