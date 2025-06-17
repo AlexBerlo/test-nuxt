@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   try {
     const { user } = await requireUserSession(event);
     const body = await readBody(event);
-    const { prompt } = body;
+    const { prompt, imageUrl: image } = body;
     const { replicateToken } = useRuntimeConfig();
 
     if (!prompt) {
@@ -24,20 +24,38 @@ export default defineEventHandler(async (event) => {
     //   safety_tolerance: 5,
     // };
 
-    const input = {
-      prompt,
-      go_fast: true,
-      megapixels: '1',
-      num_outputs: 1,
-      aspect_ratio: '1:1',
-      output_format: 'webp',
-      output_quality: 80,
-      disableSafetyChecker: true,
-      lora_scale: 1,
-      lora_weights: 'fofr/flux-80s-cyberpunk'
-    };
+    let model: `${string}/${string}` | `${string}/${string}:${string}`;
+    let input: Record<string, unknown>;
 
-    const output = await replicate.run('black-forest-labs/flux-dev-lora', { input });
+    console.log(image);
+    if (image) {
+      console.log(image);
+      console.log(image);
+      console.log(image);
+      model = 'black-forest-labs/flux-kontext-pro';
+      input = {
+        prompt,
+        input_image: image,
+        output_format: 'jpg'
+      };
+    }
+    else {
+      model = 'black-forest-labs/flux-dev-lora';
+      input = {
+        prompt,
+        go_fast: true,
+        megapixels: '1',
+        num_outputs: 1,
+        aspect_ratio: '1:1',
+        output_format: 'webp',
+        output_quality: 80,
+        disableSafetyChecker: true,
+        lora_scale: 1,
+        lora_weights: 'fofr/flux-80s-cyberpunk'
+      };
+    }
+
+    const output = await replicate.run(model, { input });
     // const output = await replicate.run('black-forest-labs/flux-1.1-pro', { input });
 
     if (!output) {
