@@ -35,6 +35,7 @@
    - Generation endpoint
    - Object detection
    - Image description
+   - Secure image access by user
 
 3. **Authentication**
    - GitHub OAuth flow
