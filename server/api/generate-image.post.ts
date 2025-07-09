@@ -27,11 +27,7 @@ export default defineEventHandler(async (event) => {
     let model: `${string}/${string}` | `${string}/${string}:${string}`;
     let input: Record<string, unknown>;
 
-    console.log(image);
     if (image) {
-      console.log(image);
-      console.log(image);
-      console.log(image);
       model = 'black-forest-labs/flux-kontext-pro';
       input = {
         prompt,

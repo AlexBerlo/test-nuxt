@@ -1,26 +1,22 @@
-<!-- pages/generate-image.vue -->
 <script setup lang="ts">
 const prompt = ref('');
-const maskPrompt = ref('');
 const generatedImage = ref('');
 const uploadedImage = ref<File | null>(null);
 const uploadedImagePreviewUrl = ref<string | null>(null);
 const uploadedImageUrl = ref<string | null>(null);
 const useForContext = ref(false);
-const isUploadingForContext = ref(false);
 const imageDescription = ref('');
 const imageGenerationLoading = ref(false);
 const imageDescriptionLoading = ref(false);
-const detectedImages = ref<string[]>([]);
+
+const emit = defineEmits(['image-generated']);
 
 const generateImage = async () => {
-  detectedImages.value = [];
   imageGenerationLoading.value = true;
 
   const body: { prompt: string; imageUrl?: string | null } = {
     prompt: prompt.value
   };
-  console.log(uploadedImageUrl);
 
   if (uploadedImageUrl.value) {
     body.imageUrl = uploadedImageUrl.value;
@@ -43,6 +39,7 @@ const generateImage = async () => {
       else {
         generatedImage.value = data.imageUrl;
       }
+      emit('image-generated', generatedImage.value);
     }
     else {
       console.error('Failed to generate image');
@@ -90,7 +87,6 @@ const describeImage = async () => {
 };
 
 const handleFileUpload = (event: Event) => {
-  console.log('asd');
   const target = event.target as HTMLInputElement;
   const files = target.files;
   if (files && files.length > 0) {
@@ -104,46 +100,16 @@ const handleFileUpload = (event: Event) => {
   }
 };
 
-const uploadForContext = async () => {
-  console.log('uploading');
-  if (!uploadedImage.value) {
-    return;
-  }
+const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result as string);
+  reader.onerror = error => reject(error);
+});
 
-  isUploadingForContext.value = true;
-  const formData = new FormData();
-  formData.append('image', uploadedImage.value);
-
-  try {
-    const response = await fetch('/api/upload-image', {
-      method: 'POST',
-      body: formData
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data.filePath) {
-        uploadedImageUrl.value = `https://multivia.ai/images/${data.filePath}`;
-        console.log(uploadedImageUrl.value);
-      }
-    }
-    else {
-      console.error('Failed to upload image for context');
-      useForContext.value = false; // Uncheck on failure
-    }
-  }
-  catch (error) {
-    console.error('Error uploading for context:', error);
-    useForContext.value = false; // Uncheck on failure
-  }
-  finally {
-    isUploadingForContext.value = false;
-  }
-};
-
-watch(useForContext, (newValue) => {
-  if (newValue) {
-    uploadForContext();
+watch(useForContext, async (newValue) => {
+  if (newValue && uploadedImage.value) {
+    uploadedImageUrl.value = await toBase64(uploadedImage.value);
   }
   else {
     uploadedImageUrl.value = null;
@@ -167,41 +133,10 @@ const saveImage = async () => {
     });
   }
 };
-
-const detectObjectsInImage = async () => {
-  if (generatedImage.value) {
-    try {
-      const detectResponse = await $fetch('/api/detect-objects-sam', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: { imageUrl: generatedImage.value, maskPrompt: maskPrompt.value }
-      });
-
-      detectedImages.value = detectResponse;
-      console.log('Detected objects:', detectResponse);
-      // Handle the result as needed (e.g., display detected objects)
-    }
-    catch (error) {
-      console.error('Error detecting objects:', error);
-    }
-  }
-};
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <div class="mb-4">
-      <UButton
-        to="/"
-        icon="i-heroicons-arrow-left"
-        variant="ghost"
-      />
-    </div>
-    <h1 class="text-2xl font-bold mb-6">
-      Image Generator
-    </h1>
+  <div>
     <UCard>
       <div class="image-generator">
         <p class="mb-4">
@@ -225,18 +160,6 @@ const detectObjectsInImage = async () => {
             :disabled="!generatedImage"
             @click="saveImage"
           />
-          <UButton
-            label="Detect objects"
-            color="primary"
-            :disabled="!generatedImage && !maskPrompt"
-            @click="detectObjectsInImage"
-          />
-          <UInput
-            v-model="maskPrompt"
-            :disabled="!generatedImage"
-            placeholder="Enter object detection prompt"
-            class="flex-grow"
-          />
         </div>
         <UProgress
           v-if="!generatedImage && imageGenerationLoading"
@@ -251,15 +174,6 @@ const detectObjectsInImage = async () => {
             alt="Generated Image"
             class="max-w-full h-auto"
           >
-        </div>
-        <div
-          v-if="detectedImages.length && detectedImages[2]"
-          class="mt-4"
-        >
-          <image-hotspots
-            :image-url="generatedImage"
-            :mask-url="detectedImages[2]"
-          />
         </div>
       </div>
     </UCard>
@@ -288,11 +202,6 @@ const detectObjectsInImage = async () => {
           <UCheckbox
             v-model="useForContext"
             label="Use as context for generation"
-            :disabled="isUploadingForContext"
-          />
-          <UProgress
-            v-if="isUploadingForContext"
-            animation="carousel"
           />
         </div>
         <div

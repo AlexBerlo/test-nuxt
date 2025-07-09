@@ -29,7 +29,7 @@ const { loggedIn } = useUserSession();
           label="Go to Image list"
         />
         <UButton
-          to="/generate-image"
+          to="/scene"
           icon="i-heroicons-list-bullet"
           class="mr-2"
           label="Go to Image gen"
