@@ -12,7 +12,7 @@
 
 ### Backend
 - **Server**: Nuxt/Nitro
-- **Database**: PostgreSQL
+- **Database**: Cloudflare D1
 - **ORM**: Drizzle
 - **Storage**: Cloudflare R2
 - **Authentication**: GitHub OAuth
@@ -28,14 +28,13 @@
 ### Required Tools
 - Node.js 18+
 - pnpm package manager
-- PostgreSQL 14+
-- Cloudflare R2 credentials
+- Cloudflare D1 & R2 credentials
 - GitHub OAuth setup
 
 ### Environment Variables
 ```bash
-# Database
-DATABASE_URL=postgresql://user:pass@localhost:5432/multivia
+# Cloudflare
+D1_DATABASE_ID=xxx
 
 # Storage
 CLOUDFLARE_ACCOUNT_ID=xxx
@@ -88,33 +87,34 @@ POST   /api/describe-image
 ```sql
 -- Stories
 CREATE TABLE stories (
-  id UUID PRIMARY KEY,
-  creator_id UUID NOT NULL,
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
   title TEXT NOT NULL,
-  state_machine JSONB NOT NULL,
-  created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL
+  start_scene_id TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
 );
 
 -- Scenes
 CREATE TABLE scenes (
-  id UUID PRIMARY KEY,
-  story_id UUID NOT NULL,
+  id TEXT PRIMARY KEY,
+  story_id TEXT NOT NULL,
   image_url TEXT,
-  options JSONB,
-  position JSONB,
+  text TEXT,
+  position TEXT,
   FOREIGN KEY (story_id) REFERENCES stories(id)
 );
 
--- Completions
-CREATE TABLE completions (
-  id UUID PRIMARY KEY,
-  story_id UUID NOT NULL,
-  user_id UUID NOT NULL,
-  path JSONB NOT NULL,
-  duration INTEGER NOT NULL,
-  completed_at TIMESTAMP NOT NULL,
-  FOREIGN KEY (story_id) REFERENCES stories(id)
+-- Scene Transitions
+CREATE TABLE scene_transitions (
+  id TEXT PRIMARY KEY,
+  story_id TEXT NOT NULL,
+  source_scene_id TEXT NOT NULL,
+  target_scene_id TEXT NOT NULL,
+  option_text TEXT NOT NULL,
+  FOREIGN KEY (story_id) REFERENCES stories(id),
+  FOREIGN KEY (source_scene_id) REFERENCES scenes(id),
+  FOREIGN KEY (target_scene_id) REFERENCES scenes(id)
 );
 ```
 

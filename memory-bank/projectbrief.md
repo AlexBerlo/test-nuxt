@@ -25,7 +25,7 @@ Create a visual storytelling platform where users can build and share interactiv
 - Vue Flow for node-based editing
 - XState for state machine management
 - Cloudflare R2 for image storage
-- PostgreSQL for story persistence
+- Cloudflare D1 for story persistence
 - Real-time completion tracking
 
 ## User Roles

@@ -1,6 +1,10 @@
 <script setup lang="ts">
+const props = defineProps<{
+  initialImageUrl?: string;
+}>();
+
 const prompt = ref('');
-const generatedImage = ref('');
+const generatedImage = ref(props.initialImageUrl || '');
 const uploadedImage = ref<File | null>(null);
 const uploadedImagePreviewUrl = ref<string | null>(null);
 const uploadedImageUrl = ref<string | null>(null);

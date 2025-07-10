@@ -29,10 +29,10 @@ const { loggedIn } = useUserSession();
           label="Go to Image list"
         />
         <UButton
-          to="/scene"
+          to="/main"
           icon="i-heroicons-list-bullet"
           class="mr-2"
-          label="Go to Image gen"
+          label="Go to scene creation"
         />
       </template>
     </template>

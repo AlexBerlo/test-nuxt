@@ -5,7 +5,7 @@
 ```mermaid
 flowchart LR
     Editor[Node Editor] --> State[XState Machine]
-    State --> DB[(PostgreSQL)]
+    State --> DB[(Cloudflare D1)]
     Editor --> Image[Image Processor]
     Image --> R2[[Cloudflare R2]]
     DB --> API[Nuxt Server API]

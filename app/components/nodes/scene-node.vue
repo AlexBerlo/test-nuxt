@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { ImageHotspot } from '../../../types/image';
-
 interface NodeData {
   label: string;
   imageUrl?: string;
@@ -21,14 +19,6 @@ const handleNodeClick = () => {
     navigateTo(`/main/scene/${props.id}`);
   }
 };
-
-const onHotspotSelect = (hotspot: ImageHotspot) => {
-  const updatedData = {
-    ...props.data,
-    selectedHotspot: hotspot
-  };
-  emit('update:data', updatedData);
-};
 </script>
 
 <template>
@@ -40,13 +30,7 @@ const onHotspotSelect = (hotspot: ImageHotspot) => {
     <div
       v-if="data.imageUrl"
       class="mb-4"
-    >
-      <ImageHotspots
-        :image-url="data.imageUrl"
-        :is-selectable="isEditing"
-        @select="onHotspotSelect"
-      />
-    </div>
+    />
     <div
       v-else
       class="flex flex-col items-center"

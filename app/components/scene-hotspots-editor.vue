@@ -1,42 +1,33 @@
 <script setup lang="ts">
-const route = useRoute();
-const imageUrl = ref(route.query.imageUrl as string || '');
+const props = defineProps<{
+  imageUrl: string;
+}>();
+
 const maskPrompt = ref('');
 const detectedImages = ref<string[]>([]);
 
 const detectObjectsInImage = async () => {
-  if (imageUrl.value) {
+  if (props.imageUrl) {
     try {
-      const detectResponse = await $fetch('/api/detect-objects-sam', {
+      const detectResponse = await $fetch<string[]>('/api/detect-objects-sam', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: { imageUrl: imageUrl.value, maskPrompt: maskPrompt.value }
+        body: { imageUrl: props.imageUrl, maskPrompt: maskPrompt.value }
       });
 
       detectedImages.value = detectResponse;
-      console.log('Detected objects:', detectResponse);
     }
-    catch (error) {
-      console.error('Error detecting objects:', error);
+    catch (err) {
+      console.error('Error detecting objects:', err);
     }
   }
 };
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <div class="mb-4">
-      <UButton
-        to="/scene"
-        icon="i-heroicons-arrow-left"
-        variant="ghost"
-      />
-    </div>
-    <h1 class="text-2xl font-bold mb-6">
-      Add Progression Hotspots
-    </h1>
+  <div>
     <UCard>
       <div class="flex items-center space-x-2 mb-4">
         <UButton

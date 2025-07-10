@@ -1,28 +1,40 @@
 <script setup lang="ts">
-const router = useRouter();
-
-const goToNewStory = () => {
-  router.push('/main/new');
-};
+const { data: stories } = await useFetch('/api/stories');
 </script>
 
 <template>
-  <div class="p-4">
-    <UContainer>
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">
-          My Stories
-        </h1>
+  <UContainer>
+    <div class="py-4">
+      <h1 class="text-2xl font-bold">
+        Your Stories
+      </h1>
+      <UButton
+        to="/main/new"
+        label="New Story"
+        class="mt-4"
+      />
+    </div>
+    <div
+      v-if="stories"
+      class="space-y-4"
+    >
+      <UCard
+        v-for="story in stories"
+        :key="story.id"
+      >
+        <template #header>
+          <h2 class="font-bold">
+            {{ story.title }}
+          </h2>
+        </template>
         <UButton
-          icon="i-heroicons-plus"
-          color="primary"
-          variant="solid"
-          aria-label="Add new story"
-          @click="goToNewStory"
+          :to="`/main/${story.id}`"
+          label="Edit"
         />
-      </div>
-    </UContainer>
-  </div>
+      </UCard>
+    </div>
+    <div v-else>
+      <p>You don't have any stories yet.</p>
+    </div>
+  </UContainer>
 </template>
-
-<style scoped lang="scss"></style>
