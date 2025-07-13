@@ -44,7 +44,6 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type { ImageHotspot } from '../../types/image';
 
 const processedMaskUrl = ref<string | null>(null);
 
@@ -53,11 +52,6 @@ const props = defineProps<{
   alt?: string;
   isSelectable?: boolean;
   maskUrl: string;
-}>();
-
-// Define emits for compatibility, but we're not using them in this implementation
-defineEmits<{
-  (e: 'select', hotspot: ImageHotspot): void;
 }>();
 
 const imageRef = ref<HTMLImageElement | null>(null);

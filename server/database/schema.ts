@@ -5,7 +5,7 @@ export const stories = sqliteTable('stories', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull(), // Creator's ID
   title: text('title').notNull(),
-  startSceneId: text('start_scene_id').notNull(), // Foreign key to scenes table
+  startSceneId: text('start_scene_id'), // Foreign key to scenes table
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull()
 });

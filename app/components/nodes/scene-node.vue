@@ -10,9 +10,9 @@ const props = defineProps<{
   isEditing?: boolean;
 }>();
 
-const emit = defineEmits<{
-  (e: 'update:data', data: NodeData): void;
-}>();
+// const emit = defineEmits<{
+//   (e: 'update:data', data: NodeData): void;
+// }>();
 
 const handleNodeClick = () => {
   if (!props.data.imageUrl) {
@@ -22,17 +22,20 @@ const handleNodeClick = () => {
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow-md p-4 w-96">
-    <h3 class="text-lg font-semibold mb-4">
+  <div
+    class="bg-white rounded-lg shadow-md p-4 w-96 h-56 bg-cover bg-center"
+    :style="{ backgroundImage: data.imageUrl ? `url(${data.imageUrl})` : 'none' }"
+    @click="handleNodeClick"
+  >
+    <h3
+      class="text-lg font-semibold mb-4 text-white"
+      style="text-shadow: 1px 1px 2px black;"
+    >
       {{ data.label || 'Scene Node' }}
     </h3>
 
     <div
-      v-if="data.imageUrl"
-      class="mb-4"
-    />
-    <div
-      v-else
+      v-if="!data.imageUrl"
       class="flex flex-col items-center"
     >
       <UButton
@@ -40,7 +43,6 @@ const handleNodeClick = () => {
         color="primary"
         variant="solid"
         aria-label="Add Image"
-        @click="handleNodeClick"
       >
         <UIcon
           name="i-heroicons-plus"

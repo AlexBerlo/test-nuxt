@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import MainFlow from '~/components/main-flow.vue';
+import type { Story } from '~~/types/api';
 
 const route = useRoute();
 const storyId = route.params.id as string;
 
-const { data: story } = await useFetch(`/api/stories/${storyId}`);
+const { data: story } = await useFetch<Story>(`/api/stories/${storyId}`);
 </script>
 
 <template>
@@ -18,10 +18,14 @@ const { data: story } = await useFetch(`/api/stories/${storyId}`);
       </h1>
     </div>
     <ClientOnly
+      v-if="story"
       fallback-tag="span"
-      fallback="Loading flow..."
+      fallback="Loading..."
     >
-      <MainFlow :story="story" />
+      <MainFlow
+        v-if="story.scenes.length > 0"
+        :story="story"
+      />
     </ClientOnly>
   </UContainer>
 </template>

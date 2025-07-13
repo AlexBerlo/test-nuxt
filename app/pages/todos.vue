@@ -11,6 +11,7 @@ const { user, clear } = useUserSession();
 const { data: todos, refresh } = await useFetch('/api/todos');
 
 const addTodo = async () => {
+  console.log('adding todo');
   if (!newTodo.value.trim())
     return;
 
@@ -120,6 +121,7 @@ const items = [[{
         icon="i-heroicons-plus-20-solid"
         :loading="loading"
         :disabled="newTodo.trim().length === 0"
+        @click="addTodo"
       />
     </div>
 

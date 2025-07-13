@@ -1,36 +1,49 @@
 <script setup>
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { Panel, VueFlow } from '@vue-flow/core';
+import { VueFlow, useVueFlow } from '@vue-flow/core';
 import { MiniMap } from '@vue-flow/minimap';
-import { v4 as uuidv4 } from 'uuid';
-import { markRaw, ref } from 'vue';
+import { markRaw, ref, watch } from 'vue';
 import SceneNode from './nodes/scene-node.vue';
+
+const props = defineProps({
+  story: {
+    type: Object,
+    required: true
+  }
+});
+
+const { onConnect, addEdges } = useVueFlow();
 
 const nodeTypes = {
   'scene-node': markRaw(SceneNode)
 };
 
-const nodes = ref([
-  {
-    id: uuidv4(),
-    type: 'scene-node', // Add this line to use the custom node type
-    data: { label: 'Scene Node' },
-    position: { x: 10, y: 10 }
-  }
-]);
-
+const nodes = ref([]);
 const edges = ref([]);
 
-const addNode = () => {
-  console.log('add node');
-  nodes.value.push({
-    id: uuidv4(),
-    type: 'scene-node', // Add this line to use the custom node type
-    data: { label: 'Scene Node' },
-    position: { x: 100, y: 100 }
-  });
-};
+watch(
+  () => props.story,
+  (story) => {
+    if (story && story.scenes) {
+      nodes.value = story.scenes.map(scene => ({
+        id: scene.id,
+        type: 'scene-node',
+        label: scene.text || 'Scene',
+        position: scene.position || { x: Math.random() * 400, y: Math.random() * 400 },
+        data: {
+          label: scene.text || 'Scene',
+          imageUrl: scene.imageUrl
+        }
+      }));
+    }
+  },
+  { immediate: true }
+);
+
+onConnect((params) => {
+  addEdges([params]);
+});
 </script>
 
 <template>
@@ -42,14 +55,6 @@ const addNode = () => {
       elevate-edges-on-select
       :node-types="nodeTypes"
     >
-      <Panel>
-        <button
-          type="button"
-          @click="addNode"
-        >
-          Add a node
-        </button>
-      </Panel>
       <MiniMap />
       <Controls />
       <Background />

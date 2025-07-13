@@ -32,7 +32,7 @@ const { loggedIn } = useUserSession();
           to="/main"
           icon="i-heroicons-list-bullet"
           class="mr-2"
-          label="Go to scene creation"
+          label="Go to Story Creation"
         />
       </template>
     </template>

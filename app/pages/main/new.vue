@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import MainFlow from '~/components/main-flow.vue';
 
 const title = ref('');
 
@@ -9,12 +8,16 @@ async function saveStory() {
     return;
   }
 
-  await $fetch('/api/stories', {
+  const story = await $fetch('/api/stories', {
     method: 'POST',
     body: {
       title: title.value
     }
   });
+
+  if (story) {
+    navigateTo(`/main/scene/new?storyId=${story.id}`);
+  }
 }
 </script>
 
@@ -33,11 +36,5 @@ async function saveStory() {
         Save Story
       </UButton>
     </div>
-    <ClientOnly
-      fallback-tag="span"
-      fallback="Loading flow..."
-    >
-      <MainFlow />
-    </ClientOnly>
   </UContainer>
 </template>

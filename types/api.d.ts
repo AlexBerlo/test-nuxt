@@ -1,16 +1,28 @@
-import type { ImageHotspot } from './image';
-
 export interface Scene {
   id: string;
-  imageUrl: string;
-  hotspots: ImageHotspot[];
-  progressionOptions: Record<string, ProgressionOption[]>;
+  storyId: string;
+  imageUrl: string | null;
+  text: string | null;
+  position: { x: number; y: number } | null;
 }
 
-export interface ProgressionOption {
+export interface SceneTransition {
   id: string;
-  label: string;
-  targetSceneId: string | null;
+  storyId: string;
+  sourceSceneId: string;
+  targetSceneId: string;
+  optionText: string;
+}
+
+export interface Story {
+  id: string;
+  userId: string;
+  title: string;
+  startSceneId: string;
+  createdAt: string;
+  updatedAt: string;
+  scenes: Scene[];
+  transitions: SceneTransition[];
 }
 
 export interface UploadResponse {
@@ -18,8 +30,4 @@ export interface UploadResponse {
   url: string;
   filePath: string;
   metaData: Record<string, string>;
-}
-
-export interface DetectionResponse {
-  hotspots: ImageHotspot[];
 }
