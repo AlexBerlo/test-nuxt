@@ -3,12 +3,18 @@ const props = defineProps<{
   imageUrl: string;
 }>();
 
+const emit = defineEmits<{
+  'mask-detected': [maskUrl: string];
+}>();
+
 const maskPrompt = ref('');
 const detectedImages = ref<string[]>([]);
+const detectionLoading = ref(false);
 
 const detectObjectsInImage = async () => {
   if (props.imageUrl) {
     try {
+      detectionLoading.value = true;
       const detectResponse = await $fetch<string[]>('/api/detect-objects-sam', {
         method: 'POST',
         headers: {
@@ -18,9 +24,17 @@ const detectObjectsInImage = async () => {
       });
 
       detectedImages.value = detectResponse;
+
+      // Emit the mask URL to the parent when detected
+      if (detectResponse.length > 0 && detectResponse[2]) {
+        emit('mask-detected', detectResponse[2]);
+      }
     }
     catch (err) {
       console.error('Error detecting objects:', err);
+    }
+    finally {
+      detectionLoading.value = false;
     }
   }
 };
@@ -43,24 +57,21 @@ const detectObjectsInImage = async () => {
           class="flex-grow"
         />
       </div>
+      <UProgress
+        v-if="!detectedImages.length && detectionLoading"
+        animation="carousel"
+      />
       <div
         v-if="detectedImages.length && detectedImages[2]"
-        class="mt-4"
+        class="mt-4 p-4 bg-green-50 rounded-lg text-center text-green-700"
       >
-        <image-hotspots
-          :image-url="imageUrl"
-          :mask-url="detectedImages[2]"
-        />
+        <p>✓ Objects detected! Hotspots are now available in the image preview above.</p>
       </div>
       <div
-        v-else-if="imageUrl"
-        class="mt-4"
+        v-else-if="maskPrompt"
+        class="mt-4 p-4 bg-gray-50 rounded-lg text-center text-gray-600"
       >
-        <img
-          :src="imageUrl"
-          alt="Generated Image"
-          class="max-w-full h-auto"
-        >
+        <p>Click "Detect objects" to identify interactive elements in your scene image.</p>
       </div>
     </UCard>
   </div>

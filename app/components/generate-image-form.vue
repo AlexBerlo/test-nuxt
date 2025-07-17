@@ -15,6 +15,15 @@ const imageDescriptionLoading = ref(false);
 
 const emit = defineEmits(['image-generated']);
 
+const regenerateImage = () => {
+  generateImage();
+};
+
+// Expose the method so parent can call it
+defineExpose({
+  regenerateImage
+});
+
 const generateImage = async () => {
   imageGenerationLoading.value = true;
 
@@ -140,7 +149,7 @@ const saveImage = async () => {
 </script>
 
 <template>
-  <div>
+  <div class="flex">
     <UCard>
       <div class="image-generator">
         <p class="mb-4">
@@ -169,16 +178,6 @@ const saveImage = async () => {
           v-if="!generatedImage && imageGenerationLoading"
           animation="carousel"
         />
-        <div
-          v-else-if="generatedImage"
-          class="mt-4"
-        >
-          <img
-            :src="generatedImage"
-            alt="Generated Image"
-            class="max-w-full h-auto"
-          >
-        </div>
       </div>
     </UCard>
     <UCard>
@@ -200,11 +199,12 @@ const saveImage = async () => {
           />
         </div>
         <div
-          v-if="uploadedImage"
+
           class="flex items-center space-x-2 mt-4"
         >
           <UCheckbox
             v-model="useForContext"
+            :disabled="!uploadedImage"
             label="Use as context for generation"
           />
         </div>
