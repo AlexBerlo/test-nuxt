@@ -16,7 +16,7 @@ const { data: stories } = await useFetch('/api/stories');
     </div>
     <div
       v-if="stories"
-      class="space-y-4"
+      class="space-y-4 flex flex-wrap gap-8"
     >
       <UCard
         v-for="story in stories"
@@ -31,6 +31,12 @@ const { data: stories } = await useFetch('/api/stories');
           :to="`/main/${story.id}`"
           label="Edit"
         />
+        <template
+          v-if="story.description"
+          #footer
+        >
+          {{ story.description }}
+        </template>
       </UCard>
     </div>
     <div v-else>

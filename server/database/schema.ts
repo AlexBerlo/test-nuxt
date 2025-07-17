@@ -4,7 +4,8 @@ import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 export const stories = sqliteTable('stories', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull(), // Creator's ID
-  title: text('title').notNull(),
+  title: text('title', { length: 50 }).notNull(),
+  description: text('description', { length: 255 }),
   startSceneId: text('start_scene_id'), // Foreign key to scenes table
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull()

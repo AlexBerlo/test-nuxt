@@ -15,6 +15,13 @@
       "when": 1752428246656,
       "tag": "0001_sudden_iron_fist",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1752519263994,
+      "tag": "0002_petite_groot",
+      "breakpoints": true
     }
   ]
 }

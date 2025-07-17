@@ -62,10 +62,10 @@ PUT    /api/stories/:id
 DELETE /api/stories/:id
 
 // Scene operations
-POST   /api/stories/:id/scenes
-GET    /api/stories/:id/scenes/:sceneId
-PUT    /api/stories/:id/scenes/:sceneId
-DELETE /api/stories/:id/scenes/:sceneId
+POST   /api/scenes
+GET    /api/scenes/:id
+PUT    /api/scenes/:id
+DELETE /api/scenes/:id
 
 // Analytics
 GET    /api/stories/:id/stats
@@ -89,8 +89,9 @@ POST   /api/describe-image
 CREATE TABLE stories (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
-  title TEXT NOT NULL,
-  start_scene_id TEXT NOT NULL,
+  title TEXT(50) NOT NULL,
+  description TEXT(255),
+  start_scene_id TEXT,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );

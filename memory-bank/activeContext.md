@@ -127,6 +127,11 @@
    ```
    server/
    ├── api/
+   │   ├── stories/
+   │   │   ├── index.post.ts
+   │   │   └── [id].get.ts
+   │   ├── scenes/
+   │   │   └── index.post.ts
    │   ├── generate-image.post.ts
    │   ├── upload-image.post.ts
    │   └── detect-objects.ts

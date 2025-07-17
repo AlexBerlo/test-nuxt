@@ -19,9 +19,9 @@ useHead({
 
 useSeoMeta({
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
-  title: 'Atidone',
+  title: 'Multivia',
   description:
-    'A Nuxt demo hosted with edge-side rendering, authentication and queyring a Cloudflare D1 database',
+    'Multivia is a platform for creating and sharing interactive stories.',
   ogImage: '/social-image.png',
   twitterImage: '/social-image.png',
   twitterCard: 'summary_large_image'
@@ -30,7 +30,7 @@ useSeoMeta({
 
 <template>
   <UApp>
-    <UContainer class="min-h-screen flex flex-col justify-center">
+    <UContainer class="flex flex-col">
       <div class="mb-2 text-right">
         <UButton
           square
@@ -41,9 +41,6 @@ useSeoMeta({
         />
       </div>
       <NuxtPage />
-      <footer class="text-center mt-2">
-        footer
-      </footer>
     </UContainer>
   </UApp>
 </template>

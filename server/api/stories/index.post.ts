@@ -2,8 +2,9 @@ import { useValidatedBody, z } from 'h3-zod';
 import { nanoid } from 'nanoid';
 
 export default eventHandler(async (event) => {
-  const { title } = await useValidatedBody(event, {
-    title: z.string().min(1).max(100)
+  const { title, description } = await useValidatedBody(event, {
+    title: z.string().min(1).max(50),
+    description: z.string().max(255).optional()
   });
   const { user } = await requireUserSession(event);
 
@@ -16,6 +17,7 @@ export default eventHandler(async (event) => {
       id: storyId,
       userId: String(user.id),
       title,
+      description,
       createdAt: new Date(),
       updatedAt: new Date()
     })

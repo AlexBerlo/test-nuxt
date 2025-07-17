@@ -51,11 +51,14 @@ flowchart LR
 ### Story Creation
 ```mermaid
 sequenceDiagram
-    Creator->>Editor: Create Scene Node
+    Creator->>API: Create Story (title, description)
+    API->>DB: Persist Story
+    Creator->>Editor: Add Scene Image
     Editor->>Image: Process Image
     Image->>R2: Store Image
-    Editor->>State: Update Machine
-    State->>DB: Persist State
+    Editor->>API: Create Scene
+    API->>DB: Persist Scene
+    API->>DB: Update Story (startSceneId)
 ```
 
 ### Story Consumption
