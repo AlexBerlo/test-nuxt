@@ -33,21 +33,24 @@ async function saveStory() {
           variant="ghost"
         />
       </div>
-      <h1 class="text-2xl font-bold mb-6">
+      <h1 class="text-2xl font-bold mb-6 text-center">
         Create a New Story
       </h1>
-      <div class="space-y-4">
+      <div class="space-y-4 flex flex-col items-center">
         <UInput
           v-model="title"
           placeholder="Story title"
           maxlength="50"
+          class="w-100"
         />
         <UTextarea
           v-model="description"
           placeholder="Story description"
           maxlength="255"
+          class="w-100"
         />
         <UButton
+          class="w-50 text-center"
           :disabled="!title"
           @click="saveStory"
         >

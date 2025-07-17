@@ -3,10 +3,14 @@ import { nanoid } from 'nanoid';
 import { eq } from 'drizzle-orm';
 
 export default eventHandler(async (event) => {
-  const { storyId, imageUrl, text } = await useValidatedBody(event, {
+  const { storyId, imageUrl, text, position } = await useValidatedBody(event, {
     storyId: z.string(),
     imageUrl: z.string().url().optional(),
-    text: z.string().optional()
+    text: z.string().optional(),
+    position: z.object({
+      x: z.number(),
+      y: z.number()
+    }).optional()
   });
   const { user } = await requireUserSession(event);
 
@@ -32,7 +36,7 @@ export default eventHandler(async (event) => {
       storyId,
       imageUrl: imageUrl || null,
       text: text || null,
-      position: { x: 250, y: 250 }
+      position: position || { x: 250, y: 250 }
     })
     .returning();
 

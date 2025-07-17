@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1752427729247,
-      "tag": "0000_lethal_shiva",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1752428246656,
-      "tag": "0001_sudden_iron_fist",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1752519263994,
-      "tag": "0002_petite_groot",
+      "when": 1752774966716,
+      "tag": "0000_slimy_mindworm",
       "breakpoints": true
     }
   ]

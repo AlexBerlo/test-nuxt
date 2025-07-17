@@ -21,11 +21,26 @@ async function saveScene() {
   }
 
   if (isNewScene) {
+    // Get the stored position from sessionStorage
+    const storedPosition = sessionStorage.getItem('newNodePosition');
+    let position = null;
+    if (storedPosition) {
+      try {
+        position = JSON.parse(storedPosition);
+        // Clear the stored position after use
+        sessionStorage.removeItem('newNodePosition');
+      }
+      catch (e) {
+        console.warn('Failed to parse stored position:', e);
+      }
+    }
+
     const scene = await $fetch('/api/scenes', {
       method: 'POST',
       body: {
         storyId,
-        imageUrl: generatedImageUrl.value
+        imageUrl: generatedImageUrl.value,
+        position
       }
     });
     if (scene) {

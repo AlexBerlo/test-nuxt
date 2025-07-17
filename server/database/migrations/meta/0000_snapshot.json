@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "257bb2e6-66b9-4d54-b75b-c56ec10611e9",
+  "id": "e934e518-fe6d-457b-a74d-0af77019c4c6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "scene_transitions": {
@@ -167,16 +167,23 @@
         },
         "title": {
           "name": "title",
-          "type": "text",
+          "type": "text(50)",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "start_scene_id": {
           "name": "start_scene_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "created_at": {

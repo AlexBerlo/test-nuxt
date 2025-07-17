@@ -21,8 +21,9 @@ CREATE TABLE `scenes` (
 CREATE TABLE `stories` (
 	`id` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
-	`title` text NOT NULL,
-	`start_scene_id` text NOT NULL,
+	`title` text(50) NOT NULL,
+	`description` text(255),
+	`start_scene_id` text,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL
 );
