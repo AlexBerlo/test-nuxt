@@ -128,24 +128,6 @@ watch(useForContext, async (newValue) => {
     uploadedImageUrl.value = null;
   }
 });
-
-const saveImage = async () => {
-  if (generatedImage.value) {
-    const response = await fetch(generatedImage.value);
-    if (!response.ok)
-      throw new Error('Network response was not ok');
-
-    const imageBlob = await response.blob();
-
-    const formData = new FormData();
-    formData.append('image', new File([imageBlob], `drawing.jpg`, { type: 'image/jpeg' }));
-
-    await fetch('/api/upload-image', {
-      method: 'POST',
-      body: formData
-    });
-  }
-};
 </script>
 
 <template>
@@ -166,12 +148,6 @@ const saveImage = async () => {
             label="Generate"
             color="primary"
             @click="generateImage"
-          />
-          <UButton
-            label="Save"
-            color="primary"
-            :disabled="!generatedImage"
-            @click="saveImage"
           />
         </div>
         <UProgress

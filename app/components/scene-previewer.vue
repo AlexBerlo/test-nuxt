@@ -1,72 +1,3 @@
-<template>
-  <UCard>
-    <div class="relative bg-gray-100 rounded-lg overflow-hidden">
-      <img
-        ref="imageRef"
-        :src="imageUrl"
-        alt="Scene preview image"
-        class="w-full h-full object-cover"
-        @load="onImageLoad"
-      >
-
-      <!-- Hotspot overlay (only shown when maskUrl is provided) -->
-      <div
-        v-if="maskUrl && imageLoaded"
-        class="absolute top-0 left-0 w-full h-full pointer-events-none"
-      >
-        <div class="hotspot-overlay">
-          <!-- Invisible hotspot area for hover detection -->
-          <div
-            v-if="processedMaskUrl"
-            class="hotspot-hover-area"
-            :style="{
-              maskImage: `url(${processedMaskUrl})`,
-              WebkitMaskImage: `url(${processedMaskUrl})`
-            }"
-            @mouseenter="isHoveringMask = true"
-            @mouseleave="isHoveringMask = false"
-          />
-
-          <!-- Highlight overlay that appears on hover -->
-          <div
-            v-if="processedMaskUrl && isHoveringMask"
-            class="hotspot-highlight"
-            :style="{
-              maskImage: `url(${processedMaskUrl})`,
-              WebkitMaskImage: `url(${processedMaskUrl})`
-            }"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- Action buttons -->
-    <div
-      v-if="showActions"
-      class="flex justify-center space-x-2 mt-4"
-    >
-      <UButton
-        label="Download"
-        variant="outline"
-        icon="i-heroicons-arrow-down-tray"
-        @click="downloadImage"
-      />
-      <UButton
-        label="Regenerate"
-        variant="outline"
-        icon="i-heroicons-arrow-path"
-        @click="$emit('regenerate')"
-      />
-      <UButton
-        label="Use This Image"
-        color="primary"
-        icon="i-heroicons-check"
-        @click="$emit('use-image')"
-      />
-    </div>
-  </UCard>
-</template>
-
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { createTransparentMask } from '~/utils/mask-utils';
@@ -80,6 +11,7 @@ const props = defineProps<{
 const _emit = defineEmits<{
   'regenerate': [];
   'use-image': [];
+  'save-image': [];
 }>();
 
 const imageRef = ref<HTMLImageElement | null>(null);
@@ -138,6 +70,80 @@ watch(() => props.maskUrl, async (newMaskUrl) => {
   }
 }, { immediate: true });
 </script>
+
+<template>
+  <UCard>
+    <div class="relative bg-gray-100 rounded-lg overflow-hidden">
+      <img
+        ref="imageRef"
+        :src="imageUrl"
+        alt="Scene preview image"
+        class="w-full h-full object-cover"
+        @load="onImageLoad"
+      >
+
+      <!-- Hotspot overlay (only shown when maskUrl is provided) -->
+      <div
+        v-if="maskUrl && imageLoaded"
+        class="absolute top-0 left-0 w-full h-full pointer-events-none"
+      >
+        <div class="hotspot-overlay">
+          <!-- Invisible hotspot area for hover detection -->
+          <div
+            v-if="processedMaskUrl"
+            class="hotspot-hover-area"
+            :style="{
+              maskImage: `url(${processedMaskUrl})`,
+              WebkitMaskImage: `url(${processedMaskUrl})`
+            }"
+            @mouseenter="isHoveringMask = true"
+            @mouseleave="isHoveringMask = false"
+          />
+
+          <!-- Highlight overlay that appears on hover -->
+          <div
+            v-if="processedMaskUrl && isHoveringMask"
+            class="hotspot-highlight"
+            :style="{
+              maskImage: `url(${processedMaskUrl})`,
+              WebkitMaskImage: `url(${processedMaskUrl})`
+            }"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div
+      v-if="showActions"
+      class="flex justify-center space-x-2 mt-4"
+    >
+      <UButton
+        label="Save"
+        color="primary"
+        @click="$emit('save-image')"
+      />
+      <UButton
+        label="Download"
+        variant="outline"
+        icon="i-heroicons-arrow-down-tray"
+        @click="downloadImage"
+      />
+      <UButton
+        label="Regenerate"
+        variant="outline"
+        icon="i-heroicons-arrow-path"
+        @click="$emit('regenerate')"
+      />
+      <UButton
+        label="Use This Image"
+        color="primary"
+        icon="i-heroicons-check"
+        @click="$emit('use-image')"
+      />
+    </div>
+  </UCard>
+</template>
 
 <style scoped>
 .hotspot-overlay {

@@ -101,7 +101,6 @@ CREATE TABLE scenes (
   id TEXT PRIMARY KEY,
   story_id TEXT NOT NULL,
   image_url TEXT,
-  text TEXT,
   position TEXT,
   FOREIGN KEY (story_id) REFERENCES stories(id)
 );
@@ -126,6 +125,10 @@ CREATE TABLE scene_transitions (
 - WebP format conversion
 - Lazy loading implementation
 - R2 edge caching
+
+## Coding Conventions
+
+- **Use Lambda Functions**: Prefer using arrow functions (`const myFunction = () => {}`) over traditional function declarations (`function myFunction() {}`) for consistency and to maintain lexical `this` scoping.
 
 ### State Machine
 - Efficient JSON serialization

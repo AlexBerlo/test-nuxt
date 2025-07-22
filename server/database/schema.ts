@@ -16,7 +16,6 @@ export const scenes = sqliteTable('scenes', {
   id: text('id').primaryKey(),
   storyId: text('story_id').notNull().references(() => stories.id),
   imageUrl: text('image_url'),
-  text: text('text'),
   // Storing position for the visual editor
   position: text('position', { mode: 'json' }).$type<{ x: number; y: number }>()
 });

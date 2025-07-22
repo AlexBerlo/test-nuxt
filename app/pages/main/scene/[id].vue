@@ -10,8 +10,6 @@ const isNewScene = sceneId === 'new';
 const generatedImageUrl = ref('');
 const detectedMaskUrl = ref<string | undefined>(undefined);
 
-const generateImageFormRef = ref();
-
 const handleImageGenerated = (imageUrl: string) => {
   generatedImageUrl.value = imageUrl;
   // Reset mask when new image is generated
@@ -22,15 +20,33 @@ const handleMaskDetected = (maskUrl: string) => {
   detectedMaskUrl.value = maskUrl;
 };
 
-const regenerateImage = () => {
-  // Trigger regeneration by calling the generate function in the child component
-  if (generateImageFormRef.value?.regenerateImage) {
-    generateImageFormRef.value.regenerateImage();
+const saveImage = async () => {
+  if (generatedImageUrl.value) {
+    const response = await fetch(generatedImageUrl.value);
+    if (!response.ok)
+      throw new Error('Network response was not ok');
+
+    const imageBlob = await response.blob();
+
+    const formData = new FormData();
+    formData.append('image', new File([imageBlob], `scene.jpg`, { type: 'image/jpeg' }));
+
+    const result = await $fetch('/api/upload-image', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (result && result.filePath) {
+      return `/images/${result.filePath}`;
+    }
   }
+  return null;
 };
 
-async function saveScene() {
-  if (!generatedImageUrl.value) {
+const saveScene = async () => {
+  const finalImageUrl = await saveImage();
+  if (!finalImageUrl) {
+    // Handle image saving error
     return;
   }
 
@@ -49,14 +65,20 @@ async function saveScene() {
       }
     }
 
+    const body: { storyId: string; imageUrl: string; position?: { x: number; y: number } | null } = {
+      storyId,
+      imageUrl: finalImageUrl
+    };
+
+    if (position) {
+      body.position = position;
+    }
+
     const scene = await $fetch('/api/scenes', {
       method: 'POST',
-      body: {
-        storyId,
-        imageUrl: generatedImageUrl.value,
-        position
-      }
+      body
     });
+
     if (scene) {
       navigateTo(`/main/${storyId}`);
     }
@@ -64,7 +86,7 @@ async function saveScene() {
   else {
     // TODO: Implement update logic for existing scenes
   }
-}
+};
 </script>
 
 <template>
@@ -88,6 +110,7 @@ async function saveScene() {
         v-if="generatedImageUrl"
         label="Save Scene"
         color="primary"
+        :disabled="!generatedImageUrl"
         @click="saveScene"
       />
     </div>
@@ -104,7 +127,6 @@ async function saveScene() {
       </div>
 
       <GenerateImageForm
-        ref="generateImageFormRef"
         :initial-image-url="generatedImageUrl"
         @image-generated="handleImageGenerated"
       />
@@ -122,8 +144,9 @@ async function saveScene() {
         :image-url="generatedImageUrl"
         :mask-url="detectedMaskUrl"
         :show-actions="true"
-        @regenerate="regenerateImage"
+        @regenerate="() => {}"
         @use-image="() => {}"
+        @save-image="saveImage"
       />
     </div>
 

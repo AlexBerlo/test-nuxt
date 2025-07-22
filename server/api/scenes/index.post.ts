@@ -3,10 +3,9 @@ import { nanoid } from 'nanoid';
 import { eq } from 'drizzle-orm';
 
 export default eventHandler(async (event) => {
-  const { storyId, imageUrl, text, position } = await useValidatedBody(event, {
+  const { storyId, imageUrl, position } = await useValidatedBody(event, {
     storyId: z.string(),
-    imageUrl: z.string().url().optional(),
-    text: z.string().optional(),
+    imageUrl: z.string().optional(),
     position: z.object({
       x: z.number(),
       y: z.number()
@@ -35,7 +34,6 @@ export default eventHandler(async (event) => {
       id: sceneId,
       storyId,
       imageUrl: imageUrl || null,
-      text: text || null,
       position: position || { x: 250, y: 250 }
     })
     .returning();
