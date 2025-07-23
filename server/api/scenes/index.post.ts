@@ -28,22 +28,31 @@ export default eventHandler(async (event) => {
 
   const sceneId = nanoid();
 
-  const [scene] = await useDB()
-    .insert(tables.scenes)
-    .values({
-      id: sceneId,
-      storyId,
-      imageUrl: imageUrl || null,
-      position: position || { x: 250, y: 250 }
-    })
-    .returning();
+  try {
+    const [scene] = await useDB()
+      .insert(tables.scenes)
+      .values({
+        id: sceneId,
+        storyId,
+        imageUrl: imageUrl || null,
+        position: position || { x: 250, y: 250 }
+      })
+      .returning();
 
-  if (scene && !story.startSceneId) {
-    await useDB()
-      .update(tables.stories)
-      .set({ startSceneId: scene.id })
-      .where(eq(tables.stories.id, storyId));
+    if (scene && !story.startSceneId) {
+      await useDB()
+        .update(tables.stories)
+        .set({ startSceneId: scene.id })
+        .where(eq(tables.stories.id, storyId));
+    }
+
+    return scene;
   }
-
-  return scene;
+  catch (e) {
+    console.log(e);
+    throw createError({
+      statusCode: 500,
+      message: 'Error creating scene'
+    });
+  }
 });
