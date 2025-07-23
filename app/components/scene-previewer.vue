@@ -73,7 +73,7 @@ watch(() => props.maskUrl, async (newMaskUrl) => {
 
 <template>
   <UCard>
-    <div class="relative bg-gray-100 rounded-lg overflow-hidden">
+    <div class="relative bg-gray-100 rounded-lg overflow-hidden w-5/6 mx-auto">
       <img
         ref="imageRef"
         :src="imageUrl"

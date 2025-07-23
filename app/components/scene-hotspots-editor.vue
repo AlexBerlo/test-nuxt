@@ -58,7 +58,7 @@ const detectObjectsInImage = async () => {
         />
       </div>
       <UProgress
-        v-if="!detectedImages.length && detectionLoading"
+        v-if="detectionLoading"
         animation="carousel"
       />
       <div

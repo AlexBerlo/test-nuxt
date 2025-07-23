@@ -151,7 +151,7 @@ watch(useForContext, async (newValue) => {
           />
         </div>
         <UProgress
-          v-if="!generatedImage && imageGenerationLoading"
+          v-if="imageGenerationLoading"
           animation="carousel"
         />
       </div>

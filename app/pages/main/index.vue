@@ -50,7 +50,7 @@ const deleteStory = async () => {
         </template>
         <div class="flex gap-2">
           <UButton
-            :to="`/main/${story.id}`"
+            :to="story.scenes && story.scenes.length > 0 ? `/main/${story.id}` : `/main/scene/new?storyId=${story.id}`"
             label="Edit"
           />
           <UButton

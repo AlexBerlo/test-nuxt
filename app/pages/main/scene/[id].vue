@@ -10,9 +10,17 @@ const isNewScene = sceneId === 'new';
 const generatedImageUrl = ref('');
 const detectedMaskUrl = ref<string | undefined>(undefined);
 
-const handleImageGenerated = (imageUrl: string) => {
+const progressionsHeader = useTemplateRef('progressionsHeader');
+
+const handleImageGenerated = async (imageUrl: string) => {
   generatedImageUrl.value = imageUrl;
   // Reset mask when new image is generated
+  console.log(progressionsHeader.value);
+  // progressionsHeader.value?.scrollIntoView({ behavior: 'smooth' });
+  await nextTick();
+  setTimeout(() => {
+    progressionsHeader.value?.scrollIntoView({ behavior: 'smooth' });
+  }, 200);
   detectedMaskUrl.value = undefined;
 };
 
@@ -87,6 +95,13 @@ const saveScene = async () => {
     // TODO: Implement update logic for existing scenes
   }
 };
+
+watch(progressionsHeader, (newVal) => {
+  if (newVal) {
+    console.log('new val');
+    // progressionsHeader.value?.scrollIntoView({ behavior: 'smooth' });
+  }
+});
 </script>
 
 <template>
@@ -152,7 +167,10 @@ const saveScene = async () => {
 
     <!-- Step 2: Add Progression Options -->
     <div v-if="generatedImageUrl">
-      <div class="flex items-center mb-4">
+      <div
+        ref="progressionsHeader"
+        class="flex items-center mb-4"
+      >
         <div class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-semibold text-sm mr-3">
           2
         </div>

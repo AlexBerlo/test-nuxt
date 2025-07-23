@@ -13,11 +13,6 @@ export default defineEventHandler(async (event) => {
     console.log(body);
     const { imageUrl, maskPrompt } = body;
 
-    console.log(imageUrl);
-    console.log('imageUrl');
-    console.log('imageUrl');
-    console.log('imageUrl');
-
     if (!imageUrl && imageUrl.length) {
       throw createError({
         statusCode: 400,
@@ -37,13 +32,6 @@ export default defineEventHandler(async (event) => {
         }
       }
     ) as unknown as string[];
-    console.log(prediction);
-
-    // const hotspots: ImageHotspot[] = prediction.masks.map((mask: string, index: number) => ({
-    //   id: `mask-${index}`,
-    //   mask,
-    //   bounds: prediction.bounds[index]
-    // }));
 
     return prediction;
   }
