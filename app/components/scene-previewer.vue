@@ -110,10 +110,6 @@ watch(() => props.maskUrl, async (newMaskUrl) => {
     processedMaskUrl.value = null;
   }
 }, { immediate: true });
-
-watch(progressionOptionsRef, (newVal) => {
-  console.log(newVal);
-}, { deep: true, immediate: true });
 </script>
 
 <template>
@@ -169,29 +165,25 @@ watch(progressionOptionsRef, (newVal) => {
           :key="index"
           class="mb-2 flex items-center justify-between"
         >
-          <div v-if="editingIndex !== index">
-            {{ index + 1 }}. {{ option }}
-          </div>
-          <div
-            v-if="editingIndex === index"
-            class="flex-grow"
-          >
-            <UInput
-              v-model="editingText"
+          <div class="flex items-center">
+            <span class="mr-2">{{ index + 1 }}.</span>
+            <div v-if="editingIndex !== index">
+              {{ option }}
+            </div>
+            <div
+              v-if="editingIndex === index"
               class="flex-grow"
-              @keyup.enter="saveEdit(index)"
-              @keyup.escape="cancelEdit"
-            />
+            >
+              <UInput
+                v-model="editingText"
+                class="flex-grow"
+                @keyup.enter="saveEdit(index)"
+                @keyup.escape="cancelEdit"
+              />
+            </div>
           </div>
+
           <div class="flex items-center space-x-2 ml-4">
-            <UButton
-              v-if="editingIndex !== index"
-              icon="i-heroicons-bars-3"
-              class="drag-handle"
-              :class="{ 'cursor-move': editingIndex === null }"
-              :disabled="editingIndex !== null"
-              size="xs"
-            />
             <UButton
               v-if="editingIndex !== index"
               icon="i-heroicons-pencil"
@@ -209,6 +201,14 @@ watch(progressionOptionsRef, (newVal) => {
               icon="i-heroicons-x-mark"
               size="xs"
               @click="cancelEdit"
+            />
+            <UButton
+              v-if="editingIndex !== index"
+              icon="i-heroicons-bars-3"
+              class="drag-handle"
+              :class="{ 'cursor-move': editingIndex === null }"
+              :disabled="editingIndex !== null"
+              size="xs"
             />
           </div>
         </li>
