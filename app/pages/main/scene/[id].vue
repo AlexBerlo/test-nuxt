@@ -2,6 +2,7 @@
 import GenerateImageForm from '~/components/generate-image-form.vue';
 import SceneHotspotsEditor from '~/components/scene-hotspots-editor.vue';
 import ScenePreviewer from '~/components/scene-previewer.vue';
+import TextProgressionEditor from '~/components/text-progression-editor.vue';
 
 const route = useRoute();
 const sceneId = route.params.id as string;
@@ -9,6 +10,7 @@ const storyId = route.query.storyId as string;
 const isNewScene = sceneId === 'new';
 const generatedImageUrl = ref('');
 const detectedMaskUrl = ref<string | undefined>(undefined);
+const progressionOptions = ref<string[]>([]);
 
 const progressionsHeader = useTemplateRef('progressionsHeader');
 
@@ -26,6 +28,22 @@ const handleImageGenerated = async (imageUrl: string) => {
 
 const handleMaskDetected = (maskUrl: string) => {
   detectedMaskUrl.value = maskUrl;
+};
+
+const handleAddProgression = (text: string) => {
+  if (progressionOptions.value.length < 5) {
+    progressionOptions.value.push(text);
+  }
+};
+
+const handleUpdateProgression = (index: number, text: string) => {
+  if (progressionOptions.value[index] !== undefined) {
+    progressionOptions.value[index] = text;
+  }
+};
+
+const handleReorderProgressions = (newOrder: string[]) => {
+  progressionOptions.value = newOrder;
 };
 
 const saveImage = async () => {
@@ -159,9 +177,12 @@ watch(progressionsHeader, (newVal) => {
         :image-url="generatedImageUrl"
         :mask-url="detectedMaskUrl"
         :show-actions="true"
+        :progression-options="progressionOptions"
         @regenerate="() => {}"
         @use-image="() => {}"
         @save-image="saveImage"
+        @update-progression="handleUpdateProgression"
+        @reorder-progressions="handleReorderProgressions"
       />
     </div>
 
@@ -177,6 +198,13 @@ watch(progressionsHeader, (newVal) => {
         <h2 class="text-xl font-semibold">
           Add Progressions
         </h2>
+      </div>
+
+      <div class="mb-4">
+        <TextProgressionEditor
+          :disabled="progressionOptions.length >= 5"
+          @add-progression="handleAddProgression"
+        />
       </div>
 
       <SceneHotspotsEditor

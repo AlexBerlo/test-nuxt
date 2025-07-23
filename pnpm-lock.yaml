@@ -22,7 +22,7 @@ importers:
         version: 1.10.0(@netlify/blobs@9.1.2)(db0@0.3.2(drizzle-orm@0.35.1(@cloudflare/workers-types@4.20250715.0)))(ioredis@5.6.1)(magicast@0.3.5)
       '@nuxt/ui':
         specifier: ^3.0.0-alpha.11
-        version: 3.2.0(@babel/parser@7.28.0)(@netlify/blobs@9.1.2)(db0@0.3.2(drizzle-orm@0.35.1(@cloudflare/workers-types@4.20250715.0)))(embla-carousel@8.6.0)(ioredis@5.6.1)(jwt-decode@4.0.0)(magicast@0.3.5)(typescript@5.6.3)(vite@7.0.5(@types/node@24.0.14)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(vue-router@4.5.1(vue@3.5.17(typescript@5.6.3)))(vue@3.5.17(typescript@5.6.3))(zod@3.25.76)
+        version: 3.2.0(@babel/parser@7.28.0)(@netlify/blobs@9.1.2)(db0@0.3.2(drizzle-orm@0.35.1(@cloudflare/workers-types@4.20250715.0)))(embla-carousel@8.6.0)(ioredis@5.6.1)(jwt-decode@4.0.0)(magicast@0.3.5)(sortablejs@1.15.6)(typescript@5.6.3)(vite@7.0.5(@types/node@24.0.14)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(vue-router@4.5.1(vue@3.5.17(typescript@5.6.3)))(vue@3.5.17(typescript@5.6.3))(zod@3.25.76)
       '@nuxthub/core':
         specifier: ^0.7.37
         version: 0.7.37(@netlify/blobs@9.1.2)(db0@0.3.2(drizzle-orm@0.35.1(@cloudflare/workers-types@4.20250715.0)))(ioredis@5.6.1)(magicast@0.3.5)(vite@7.0.5(@types/node@24.0.14)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))
@@ -39,11 +39,14 @@ importers:
         specifier: ^1.5.2
         version: 1.5.3(@vue-flow/core@1.45.0(vue@3.5.17(typescript@5.6.3)))(vue@3.5.17(typescript@5.6.3))
       '@vueuse/components':
-        specifier: ^11.3.0
-        version: 11.3.0(vue@3.5.17(typescript@5.6.3))
+        specifier: ^13.5.0
+        version: 13.5.0(vue@3.5.17(typescript@5.6.3))
       '@vueuse/core':
-        specifier: ^11.3.0
-        version: 11.3.0(vue@3.5.17(typescript@5.6.3))
+        specifier: ^13.5.0
+        version: 13.5.0(vue@3.5.17(typescript@5.6.3))
+      '@vueuse/integrations':
+        specifier: ^13.5.0
+        version: 13.5.0(fuse.js@7.1.0)(jwt-decode@4.0.0)(sortablejs@1.15.6)(vue@3.5.17(typescript@5.6.3))
       drizzle-kit:
         specifier: ^0.26.2
         version: 0.26.2
@@ -71,6 +74,9 @@ importers:
       replicate:
         specifier: ^0.34.1
         version: 0.34.1
+      sortablejs:
+        specifier: ^1.15.6
+        version: 1.15.6
       vite-plugin-eslint:
         specifier: ^1.8.1
         version: 1.8.1(eslint@9.31.0(jiti@2.4.2))(vite@7.0.5(@types/node@24.0.14)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))
@@ -2903,14 +2909,13 @@ packages:
   '@vue/shared@3.5.17':
     resolution: {integrity: sha512-CabR+UN630VnsJO/jHWYBC1YVXyMq94KKp6iF5MQgZJs5I8cmjw6oVMO1oDbtBkENSHSSn/UadWlW/OAgdmKrg==}
 
-  '@vueuse/components@11.3.0':
-    resolution: {integrity: sha512-sqaGtWPgobXvZmv3atcjW8YW0ypecFuB286OEKFXaPrLsA5b2Y+xAvHvq5V7d+VJRKt705gCK3BNBjxu3g1PdQ==}
+  '@vueuse/components@13.5.0':
+    resolution: {integrity: sha512-bU/FJNQMCxzDFp67YuxFQSV9CptHxZIgtExjFgJU8AE/gRRJMzGfPjNm+HvaVnMRl8IFFv4E+6JQV0kDu4zIpw==}
+    peerDependencies:
+      vue: ^3.5.0
 
   '@vueuse/core@10.11.1':
     resolution: {integrity: sha512-guoy26JQktXPcz+0n3GukWIy/JDNKti9v6VEMu6kV2sYBsWuGiTU8OWdg+ADfUbHg3/3DlqySDe7JmdHrktiww==}
-
-  '@vueuse/core@11.3.0':
-    resolution: {integrity: sha512-7OC4Rl1f9G8IT6rUfi9JrKiXy4bfmHhZ5x2Ceojy0jnd3mHNEvV4JaRygH362ror6/NZ+Nl+n13LPzGiPN8cKA==}
 
   '@vueuse/core@12.8.2':
     resolution: {integrity: sha512-HbvCmZdzAu3VGi/pWYm5Ut+Kd9mn1ZHnn4L5G8kOQTPs/IwIAmJoBrmYk2ckLArgMXZj0AW3n5CAejLUO+PhdQ==}
@@ -2965,9 +2970,6 @@ packages:
   '@vueuse/metadata@10.11.1':
     resolution: {integrity: sha512-IGa5FXd003Ug1qAZmyE8wF3sJ81xGLSqTqtQ6jaVfkeZ4i5kS2mwQF61yhVqojRnenVew5PldLyRgvdl4YYuSw==}
 
-  '@vueuse/metadata@11.3.0':
-    resolution: {integrity: sha512-pwDnDspTqtTo2HwfLw4Rp6yywuuBdYnPYDq+mO38ZYKGebCUQC/nVj/PXSiK9HX5otxLz8Fn7ECPbjiRz2CC3g==}
-
   '@vueuse/metadata@12.8.2':
     resolution: {integrity: sha512-rAyLGEuoBJ/Il5AmFHiziCPdQzRt88VxR+Y/A/QhJ1EWtWqPBBAxTAFaSkviwEuOEZNtW8pvkPgoCZQ+HxqW1A==}
 
@@ -2981,9 +2983,6 @@ packages:
 
   '@vueuse/shared@10.11.1':
     resolution: {integrity: sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==}
-
-  '@vueuse/shared@11.3.0':
-    resolution: {integrity: sha512-P8gSSWQeucH5821ek2mn/ciCk+MS/zoRKqdQIM3bHq6p7GXDAJLmnRRKmF5F65sAVJIfzQlwR3aDzwCn10s8hA==}
 
   '@vueuse/shared@12.8.2':
     resolution: {integrity: sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==}
@@ -6207,6 +6206,9 @@ packages:
   smob@1.5.0:
     resolution: {integrity: sha512-g6T+p7QO8npa+/hNx9ohv1E5pVCmWrVCUzUXJyLdMmftX6ER0oiWY/w9knEonLpnOp6b6FenKnMfR8gqwWdwig==}
 
+  sortablejs@1.15.6:
+    resolution: {integrity: sha512-aNfiuwMEpfBM/CN6LY0ibyhxPfPbyFeBTYJKCvzkJ2GkUpazIt3H+QIPAMHwqQ7tMKaHz1Qj+rJJCqljnf4p3A==}
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -8835,7 +8837,7 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  '@nuxt/ui@3.2.0(@babel/parser@7.28.0)(@netlify/blobs@9.1.2)(db0@0.3.2(drizzle-orm@0.35.1(@cloudflare/workers-types@4.20250715.0)))(embla-carousel@8.6.0)(ioredis@5.6.1)(jwt-decode@4.0.0)(magicast@0.3.5)(typescript@5.6.3)(vite@7.0.5(@types/node@24.0.14)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(vue-router@4.5.1(vue@3.5.17(typescript@5.6.3)))(vue@3.5.17(typescript@5.6.3))(zod@3.25.76)':
+  '@nuxt/ui@3.2.0(@babel/parser@7.28.0)(@netlify/blobs@9.1.2)(db0@0.3.2(drizzle-orm@0.35.1(@cloudflare/workers-types@4.20250715.0)))(embla-carousel@8.6.0)(ioredis@5.6.1)(jwt-decode@4.0.0)(magicast@0.3.5)(sortablejs@1.15.6)(typescript@5.6.3)(vite@7.0.5(@types/node@24.0.14)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(vue-router@4.5.1(vue@3.5.17(typescript@5.6.3)))(vue@3.5.17(typescript@5.6.3))(zod@3.25.76)':
     dependencies:
       '@iconify/vue': 5.0.0(vue@3.5.17(typescript@5.6.3))
       '@internationalized/date': 3.8.2
@@ -8851,7 +8853,7 @@ snapshots:
       '@tanstack/vue-table': 8.21.3(vue@3.5.17(typescript@5.6.3))
       '@unhead/vue': 2.0.12(vue@3.5.17(typescript@5.6.3))
       '@vueuse/core': 13.5.0(vue@3.5.17(typescript@5.6.3))
-      '@vueuse/integrations': 13.5.0(fuse.js@7.1.0)(jwt-decode@4.0.0)(vue@3.5.17(typescript@5.6.3))
+      '@vueuse/integrations': 13.5.0(fuse.js@7.1.0)(jwt-decode@4.0.0)(sortablejs@1.15.6)(vue@3.5.17(typescript@5.6.3))
       colortranslator: 5.0.0
       consola: 3.4.2
       defu: 6.1.4
@@ -10010,30 +10012,17 @@ snapshots:
 
   '@vue/shared@3.5.17': {}
 
-  '@vueuse/components@11.3.0(vue@3.5.17(typescript@5.6.3))':
+  '@vueuse/components@13.5.0(vue@3.5.17(typescript@5.6.3))':
     dependencies:
-      '@vueuse/core': 11.3.0(vue@3.5.17(typescript@5.6.3))
-      '@vueuse/shared': 11.3.0(vue@3.5.17(typescript@5.6.3))
-      vue-demi: 0.14.10(vue@3.5.17(typescript@5.6.3))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
+      '@vueuse/core': 13.5.0(vue@3.5.17(typescript@5.6.3))
+      '@vueuse/shared': 13.5.0(vue@3.5.17(typescript@5.6.3))
+      vue: 3.5.17(typescript@5.6.3)
 
   '@vueuse/core@10.11.1(vue@3.5.17(typescript@5.6.3))':
     dependencies:
       '@types/web-bluetooth': 0.0.20
       '@vueuse/metadata': 10.11.1
       '@vueuse/shared': 10.11.1(vue@3.5.17(typescript@5.6.3))
-      vue-demi: 0.14.10(vue@3.5.17(typescript@5.6.3))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-
-  '@vueuse/core@11.3.0(vue@3.5.17(typescript@5.6.3))':
-    dependencies:
-      '@types/web-bluetooth': 0.0.20
-      '@vueuse/metadata': 11.3.0
-      '@vueuse/shared': 11.3.0(vue@3.5.17(typescript@5.6.3))
       vue-demi: 0.14.10(vue@3.5.17(typescript@5.6.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -10055,7 +10044,7 @@ snapshots:
       '@vueuse/shared': 13.5.0(vue@3.5.17(typescript@5.6.3))
       vue: 3.5.17(typescript@5.6.3)
 
-  '@vueuse/integrations@13.5.0(fuse.js@7.1.0)(jwt-decode@4.0.0)(vue@3.5.17(typescript@5.6.3))':
+  '@vueuse/integrations@13.5.0(fuse.js@7.1.0)(jwt-decode@4.0.0)(sortablejs@1.15.6)(vue@3.5.17(typescript@5.6.3))':
     dependencies:
       '@vueuse/core': 13.5.0(vue@3.5.17(typescript@5.6.3))
       '@vueuse/shared': 13.5.0(vue@3.5.17(typescript@5.6.3))
@@ -10063,10 +10052,9 @@ snapshots:
     optionalDependencies:
       fuse.js: 7.1.0
       jwt-decode: 4.0.0
+      sortablejs: 1.15.6
 
   '@vueuse/metadata@10.11.1': {}
-
-  '@vueuse/metadata@11.3.0': {}
 
   '@vueuse/metadata@12.8.2': {}
 
@@ -10085,13 +10073,6 @@ snapshots:
       - typescript
 
   '@vueuse/shared@10.11.1(vue@3.5.17(typescript@5.6.3))':
-    dependencies:
-      vue-demi: 0.14.10(vue@3.5.17(typescript@5.6.3))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-
-  '@vueuse/shared@11.3.0(vue@3.5.17(typescript@5.6.3))':
     dependencies:
       vue-demi: 0.14.10(vue@3.5.17(typescript@5.6.3))
     transitivePeerDependencies:
@@ -13948,6 +13929,8 @@ snapshots:
   slugify@1.6.6: {}
 
   smob@1.5.0: {}
+
+  sortablejs@1.15.6: {}
 
   source-map-js@1.2.1: {}
 

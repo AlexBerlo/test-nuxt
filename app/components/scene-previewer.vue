@@ -1,23 +1,64 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, toRef, nextTick } from 'vue';
+import { useSortable, moveArrayElement } from '@vueuse/integrations/useSortable';
 import { createTransparentMask } from '~/utils/mask-utils';
 
 const props = defineProps<{
   imageUrl: string;
   maskUrl?: string;
   showActions?: boolean;
+  progressionOptions?: string[];
 }>();
 
-const _emit = defineEmits<{
+const emit = defineEmits<{
   'regenerate': [];
   'use-image': [];
   'save-image': [];
+  'update-progression': [index: number, text: string];
+  'reorder-progressions': [progressions: string[]];
 }>();
 
 const imageRef = ref<HTMLImageElement | null>(null);
 const imageLoaded = ref(false);
 const isHoveringMask = ref(false);
 const processedMaskUrl = ref<string | null>(null);
+const editingIndex = ref<number | null>(null);
+const editingText = ref('');
+const sortableList = useTemplateRef<HTMLElement>('sortableList');
+const progressionOptionsRef = toRef(props, 'progressionOptions', []);
+
+watch(progressionOptionsRef, () => {
+  nextTick(() => {
+    useSortable(sortableList, progressionOptionsRef, {
+      animation: 150,
+      handle: '.drag-handle',
+      onUpdate: (e: { oldIndex: number; newIndex: number }) => {
+        moveArrayElement(progressionOptionsRef.value, e.oldIndex, e.newIndex, e);
+        nextTick(() => {
+          /* do something */
+        });
+      }
+    });
+  });
+}, { deep: true, immediate: true });
+
+const startEditing = (index: number, text: string) => {
+  editingIndex.value = index;
+  editingText.value = text;
+};
+
+const saveEdit = (index: number) => {
+  if (editingIndex.value !== null) {
+    emit('update-progression', index, editingText.value);
+    editingIndex.value = null;
+    editingText.value = '';
+  }
+};
+
+const cancelEdit = () => {
+  editingIndex.value = null;
+  editingText.value = '';
+};
 
 const onImageLoad = () => {
   if (imageRef.value) {
@@ -69,6 +110,10 @@ watch(() => props.maskUrl, async (newMaskUrl) => {
     processedMaskUrl.value = null;
   }
 }, { immediate: true });
+
+watch(progressionOptionsRef, (newVal) => {
+  console.log(newVal);
+}, { deep: true, immediate: true });
 </script>
 
 <template>
@@ -113,6 +158,63 @@ watch(() => props.maskUrl, async (newMaskUrl) => {
       </div>
     </div>
 
+    <!-- Progression Options Display -->
+    <div
+      v-if="progressionOptions && progressionOptions.length > 0"
+      class="bg-black text-white p-4 mt-4 rounded-lg"
+    >
+      <ul ref="sortableList">
+        <li
+          v-for="(option, index) in progressionOptionsRef"
+          :key="index"
+          class="mb-2 flex items-center justify-between"
+        >
+          <div v-if="editingIndex !== index">
+            {{ index + 1 }}. {{ option }}
+          </div>
+          <div
+            v-if="editingIndex === index"
+            class="flex-grow"
+          >
+            <UInput
+              v-model="editingText"
+              class="flex-grow"
+              @keyup.enter="saveEdit(index)"
+              @keyup.escape="cancelEdit"
+            />
+          </div>
+          <div class="flex items-center space-x-2 ml-4">
+            <UButton
+              v-if="editingIndex !== index"
+              icon="i-heroicons-bars-3"
+              class="drag-handle"
+              :class="{ 'cursor-move': editingIndex === null }"
+              :disabled="editingIndex !== null"
+              size="xs"
+            />
+            <UButton
+              v-if="editingIndex !== index"
+              icon="i-heroicons-pencil"
+              size="xs"
+              @click="startEditing(index, option)"
+            />
+            <UButton
+              v-if="editingIndex === index"
+              icon="i-heroicons-check"
+              size="xs"
+              @click="saveEdit(index)"
+            />
+            <UButton
+              v-if="editingIndex === index"
+              icon="i-heroicons-x-mark"
+              size="xs"
+              @click="cancelEdit"
+            />
+          </div>
+        </li>
+      </ul>
+    </div>
+
     <!-- Action buttons -->
     <div
       v-if="showActions"
@@ -121,7 +223,7 @@ watch(() => props.maskUrl, async (newMaskUrl) => {
       <UButton
         label="Save"
         color="primary"
-        @click="$emit('save-image')"
+        @click="emit('save-image')"
       />
       <UButton
         label="Download"
@@ -133,13 +235,13 @@ watch(() => props.maskUrl, async (newMaskUrl) => {
         label="Regenerate"
         variant="outline"
         icon="i-heroicons-arrow-path"
-        @click="$emit('regenerate')"
+        @click="emit('regenerate')"
       />
       <UButton
         label="Use This Image"
         color="primary"
         icon="i-heroicons-check"
-        @click="$emit('use-image')"
+        @click="emit('use-image')"
       />
     </div>
   </UCard>
