@@ -92,9 +92,10 @@ const saveScene = async () => {
       }
     }
 
-    const body: { storyId: string; imageUrl: string; position?: { x: number; y: number } | null } = {
+    const body: { storyId: string; imageUrl: string; position?: { x: number; y: number } | null; progressionOptions?: string[] } = {
       storyId,
-      imageUrl: finalImageUrl
+      imageUrl: finalImageUrl,
+      progressionOptions: progressionOptions.value
     };
 
     if (position) {

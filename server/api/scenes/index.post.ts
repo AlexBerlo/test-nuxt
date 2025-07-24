@@ -3,13 +3,14 @@ import { nanoid } from 'nanoid';
 import { eq } from 'drizzle-orm';
 
 export default eventHandler(async (event) => {
-  const { storyId, imageUrl, position } = await useValidatedBody(event, {
+  const { storyId, imageUrl, position, progressionOptions } = await useValidatedBody(event, {
     storyId: z.string(),
     imageUrl: z.string().optional(),
     position: z.object({
       x: z.number(),
       y: z.number()
-    }).optional()
+    }).optional(),
+    progressionOptions: z.array(z.string()).optional()
   });
   const { user } = await requireUserSession(event);
 
@@ -38,6 +39,23 @@ export default eventHandler(async (event) => {
         position: position || { x: 250, y: 250 }
       })
       .returning();
+
+    // Create scene transitions for progression options
+    if (progressionOptions && progressionOptions.length > 0) {
+      const transitionPromises = progressionOptions.map(optionText =>
+        useDB()
+          .insert(tables.sceneTransitions)
+          .values({
+            id: nanoid(),
+            storyId,
+            sourceSceneId: sceneId,
+            targetSceneId: null, // Null for unconnected transitions
+            optionText
+          })
+      );
+
+      await Promise.all(transitionPromises);
+    }
 
     if (scene && !story.startSceneId) {
       await useDB()

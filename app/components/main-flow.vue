@@ -5,10 +5,11 @@ import { VueFlow, useVueFlow } from '@vue-flow/core';
 import { MiniMap } from '@vue-flow/minimap';
 import { markRaw, ref, watch } from 'vue';
 import SceneNode from './nodes/scene-node.vue';
+import { calculateNewNodePosition } from '~/utils/flow-utils';
 
 const props = defineProps({
   story: {
-    type: Object,
+    type: Story,
     required: true
   }
 });
@@ -26,86 +27,93 @@ watch(
   () => props.story,
   (story) => {
     if (story && story.scenes) {
-      nodes.value = story.scenes.map(scene => ({
-        id: scene.id,
-        type: 'scene-node',
-        label: scene.text || 'Scene',
-        position: scene.position || { x: Math.random() * 400, y: Math.random() * 400 },
-        data: {
+      nodes.value = story.scenes.map((scene) => {
+        // Get progression options for this scene
+        const sceneTransitions = story.transitions
+          ? story.transitions.filter(t => t.sourceSceneId === scene.id)
+          : [];
+
+        return {
+          id: scene.id,
+          type: 'scene-node',
           label: scene.text || 'Scene',
-          imageUrl: scene.imageUrl
-        }
-      }));
+          position: scene.position || { x: Math.random() * 400, y: Math.random() * 400 },
+          data: {
+            label: scene.text || 'Scene',
+            imageUrl: scene.imageUrl,
+            progressionOptions: sceneTransitions.map(t => ({
+              id: t.id,
+              text: t.optionText,
+              connected: !!t.targetSceneId
+            }))
+          }
+        };
+      });
+
+      // Convert transitions to edges
+      if (story.transitions) {
+        edges.value = story.transitions
+          .filter(transition => transition.targetSceneId) // Only connected transitions
+          .map(transition => ({
+            id: transition.id,
+            source: transition.sourceSceneId,
+            target: transition.targetSceneId,
+            type: 'default',
+            style: {
+              stroke: '#374151',
+              strokeWidth: 2
+            }
+          }));
+      }
     }
   },
   { immediate: true }
 );
 
-onConnect((params) => {
-  addEdges([params]);
-});
+onConnect(async (params) => {
+  // Extract the transition ID from the source handle
+  const sourceHandleId = params.sourceHandle;
+  const targetSceneId = params.target;
 
-// Calculate non-overlapping position for new node
-const calculateNewNodePosition = () => {
-  const nodeWidth = 384; // w-96
-  const nodeHeight = 224; // h-56
-  const minSpacing = 50; // minimum gap between nodes
-  const gridSize = 150; // grid spacing
+  if (sourceHandleId && sourceHandleId.startsWith('option-')) {
+    const transitionId = sourceHandleId.replace('option-', '');
 
-  // Start from center of viewport
-  const startX = 200;
-  const startY = 200;
-
-  // If no existing nodes, use starting position
-  if (nodes.value.length === 0) {
-    return { x: startX, y: startY };
-  }
-
-  // Try positions in expanding spiral
-  for (let radius = 0; radius < 2000; radius += gridSize) {
-    const positions = [];
-
-    if (radius === 0) {
-      positions.push({ x: startX, y: startY });
-    }
-    else {
-      // Generate positions in a circle around the center
-      const steps = Math.max(8, Math.floor(radius / 50));
-      for (let i = 0; i < steps; i++) {
-        const angle = (i * 2 * Math.PI) / steps;
-        const x = startX + radius * Math.cos(angle);
-        const y = startY + radius * Math.sin(angle);
-        positions.push({ x, y });
-      }
-    }
-
-    // Check each position for overlaps
-    for (const pos of positions) {
-      let hasOverlap = false;
-
-      for (const node of nodes.value) {
-        const dx = Math.abs(pos.x - node.position.x);
-        const dy = Math.abs(pos.y - node.position.y);
-
-        if (dx < nodeWidth + minSpacing && dy < nodeHeight + minSpacing) {
-          hasOverlap = true;
-          break;
+    try {
+      // Update the scene transition with the target scene ID
+      await $fetch(`/api/scene-transitions/${transitionId}`, {
+        method: 'PUT',
+        body: {
+          targetSceneId
         }
-      }
+      });
 
-      if (!hasOverlap) {
-        return pos;
-      }
+      // Add the edge to the flow
+      addEdges([{
+        ...params,
+        type: 'default',
+        style: {
+          stroke: '#374151',
+          strokeWidth: 2
+        }
+      }]);
+
+      // Refresh the story data to show the updated connection
+      // You might want to emit an event here to refresh the parent component
+      console.log('Connection created successfully');
+    }
+    catch (error) {
+      console.error('Failed to create connection:', error);
     }
   }
-
-  // Fallback: random position if no suitable position found
-  return { x: Math.random() * 400, y: Math.random() * 400 };
-};
+  else {
+    // Regular connection
+    addEdges([params]);
+  }
+});
 
 // Handle add new node click
 const handleAddNewNode = () => {
-  const newPosition = calculateNewNodePosition();
+  const newPosition = calculateNewNodePosition(nodes.value);
   // Store position in sessionStorage to use after scene creation
   sessionStorage.setItem('newNodePosition', JSON.stringify(newPosition));
   // Navigate to scene creation

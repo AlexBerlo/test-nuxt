@@ -25,7 +25,7 @@ export const sceneTransitions = sqliteTable('scene_transitions', {
   id: text('id').primaryKey(),
   storyId: text('story_id').notNull().references(() => stories.id),
   sourceSceneId: text('source_scene_id').notNull().references(() => scenes.id),
-  targetSceneId: text('target_scene_id').notNull().references(() => scenes.id),
+  targetSceneId: text('target_scene_id').references(() => scenes.id), // Nullable for unconnected transitions
   optionText: text('option_text').notNull()
 });
 

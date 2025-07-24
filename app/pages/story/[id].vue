@@ -23,7 +23,7 @@ const { data: story } = await useFetch<Story>(`/api/stories/${storyId}`);
       fallback="Loading..."
     >
       <MainFlow
-        v-if="story.scenes.length > 0"
+        v-if="story.startSceneId"
         :story="story"
       />
     </ClientOnly>
