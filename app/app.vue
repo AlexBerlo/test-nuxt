@@ -30,26 +30,22 @@ useSeoMeta({
 
 <template>
   <UApp>
-    <UHeader>
-      <template #left>
+    <div class="flex items-center justify-between px-4 py-2">
+      <div>
         <NuxtLink
           to="/"
           class="fw-600 text-xl"
         >
           Multivia
         </NuxtLink>
-      </template>
-      <template #right>
+      </div>
+      <div class="flex items-center gap-3">
         <NuxtLink to="/story">
           Stories
         </NuxtLink>
         <NuxtLink to="/images-list">
           Image gallery
         </NuxtLink>
-      </template>
-    </UHeader>
-    <UContainer class="flex flex-col">
-      <div class="mb-2 text-right">
         <UButton
           square
           variant="ghost"
@@ -58,6 +54,9 @@ useSeoMeta({
           @click="toggleColorMode"
         />
       </div>
+    </div>
+    <UContainer class="flex flex-col">
+      <div class="mb-2 text-right" />
       <NuxtPage />
     </UContainer>
   </UApp>
