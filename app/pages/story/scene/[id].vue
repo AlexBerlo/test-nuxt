@@ -7,6 +7,7 @@ import TextProgressionEditor from '~/components/text-progression-editor.vue';
 const route = useRoute();
 const sceneId = route.params.id as string;
 const storyId = route.query.storyId as string;
+const sceneCount = parseInt(route.query.scCnt as string);
 const isNewScene = sceneId === 'new';
 const generatedImageUrl = ref('');
 const detectedMaskUrl = ref<string | undefined>(undefined);
@@ -106,7 +107,7 @@ const saveScene = async () => {
     });
 
     if (scene) {
-      navigateTo(`/main/${storyId}`);
+      navigateTo(`/story/${storyId}`);
     }
   }
   else {
@@ -126,7 +127,7 @@ watch(progressionsHeader, (newVal) => {
   <div class="container mx-auto px-4 py-8">
     <div class="mb-4">
       <UButton
-        to="/main/new"
+        :to="sceneCount > 0 ?`/story/${storyId}` : '/story'"
         icon="i-heroicons-arrow-left"
         variant="ghost"
       />

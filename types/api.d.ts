@@ -21,7 +21,6 @@ export interface Story {
   startSceneId: string;
   createdAt: string;
   updatedAt: string;
-  scenes: Scene[];
   description: string;
   transitions: SceneTransition[];
 }

@@ -109,7 +109,7 @@ const handleAddNewNode = () => {
   // Store position in sessionStorage to use after scene creation
   sessionStorage.setItem('newNodePosition', JSON.stringify(newPosition));
   // Navigate to scene creation
-  navigateTo(`/main/scene/new?storyId=${props.story.id}`);
+  navigateTo(`/story/scene/new?storyId=${props.story.id}`);
 };
 </script>
 

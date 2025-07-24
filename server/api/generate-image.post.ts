@@ -36,19 +36,23 @@ export default defineEventHandler(async (event) => {
       };
     }
     else {
-      model = 'black-forest-labs/flux-dev-lora';
+      model = 'black-forest-labs/flux-schnell';
       input = {
-        prompt,
-        go_fast: true,
-        megapixels: '1',
-        num_outputs: 1,
-        aspect_ratio: '1:1',
-        output_format: 'webp',
-        output_quality: 80,
-        disableSafetyChecker: true,
-        lora_scale: 1,
-        lora_weights: 'fofr/flux-80s-cyberpunk'
+        prompt
       };
+      // model = 'black-forest-labs/flux-dev-lora';
+      // input = {
+      //   prompt,
+      //   go_fast: true,
+      //   megapixels: '1',
+      //   num_outputs: 1,
+      //   aspect_ratio: '1:1',
+      //   output_format: 'webp',
+      //   output_quality: 80,
+      //   disableSafetyChecker: true,
+      //   lora_scale: 1,
+      //   lora_weights: 'fofr/flux-80s-cyberpunk'
+      // };
     }
 
     const output = await replicate.run(model, { input });

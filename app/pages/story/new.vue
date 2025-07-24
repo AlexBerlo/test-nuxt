@@ -18,7 +18,7 @@ async function saveStory() {
   });
 
   if (story) {
-    navigateTo(`/main/scene/new?storyId=${story.id}`);
+    navigateTo(`/story/scene/new?storyId=${story.id}?scCnt=0`);
   }
 }
 </script>
@@ -28,7 +28,7 @@ async function saveStory() {
     <div class="py-4">
       <div class="mb-4">
         <UButton
-          to="/main"
+          to="/story"
           icon="i-heroicons-arrow-left"
           variant="ghost"
         />

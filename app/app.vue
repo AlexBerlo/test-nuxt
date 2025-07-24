@@ -30,6 +30,24 @@ useSeoMeta({
 
 <template>
   <UApp>
+    <UHeader>
+      <template #left>
+        <NuxtLink
+          to="/"
+          class="fw-600 text-xl"
+        >
+          Multivia
+        </NuxtLink>
+      </template>
+      <template #right>
+        <NuxtLink to="/story">
+          Stories
+        </NuxtLink>
+        <NuxtLink to="/images-list">
+          Image gallery
+        </NuxtLink>
+      </template>
+    </UHeader>
     <UContainer class="flex flex-col">
       <div class="mb-2 text-right">
         <UButton

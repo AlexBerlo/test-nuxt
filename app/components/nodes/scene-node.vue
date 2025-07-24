@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const handleNodeClick = () => {
   if (!props.data.imageUrl) {
-    navigateTo(`/main/scene/${props.id}`);
+    navigateTo(`/story/scene/${props.id}`);
   }
 };
 </script>

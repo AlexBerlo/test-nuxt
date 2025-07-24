@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   // },
   modules: [
     '@nuxthub/core',
-    '@nuxt/ui',
+    '@nuxt/ui-pro',
     'nuxt-auth-utils',
     '@nuxt/eslint',
     '@nuxt/image',

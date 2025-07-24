@@ -11,13 +11,6 @@ export default eventHandler(async (event) => {
     });
   }
 
-  console.log('asdadssad');
-  console.log('asdadssad');
-  console.log('asdadssad');
-  console.log('asdadssad');
-  console.log('asdadssad');
-  console.log('asdadssad');
-  console.log('asdadssad');
   const story = await useDB()
     .select()
     .from(tables.stories)

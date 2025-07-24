@@ -2,6 +2,7 @@
 import type { Story } from '~~/types/api';
 
 const { data: stories, refresh } = await useFetch<Story[]>('/api/stories');
+console.log(stories.value);
 const isModalOpen = ref(false);
 const storyToDelete = ref<Story | null>(null);
 
@@ -30,7 +31,7 @@ const deleteStory = async () => {
         Your Stories
       </h1>
       <UButton
-        to="/main/new"
+        to="/story/new"
         label="New Story"
         class="mt-4"
       />
@@ -50,7 +51,7 @@ const deleteStory = async () => {
         </template>
         <div class="flex gap-2">
           <UButton
-            :to="story.scenes && story.scenes.length > 0 ? `/main/${story.id}` : `/main/scene/new?storyId=${story.id}`"
+            :to="story.startSceneId ? `/story/${story.id}` : `/story/scene/new?storyId=${story.id}`"
             label="Edit"
           />
           <UButton
