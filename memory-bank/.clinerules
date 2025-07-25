@@ -31,6 +31,49 @@
 - Utils: camelCase (imageUtils.ts)
 - Types: PascalCase (SceneNodeType.ts)
 
+## TypeScript Standards
+
+### Props Definition
+Always use TypeScript generics for props definition:
+```typescript
+const props = defineProps<{
+  id: string;
+  data: NodeData;
+  isEditing?: boolean;
+}>();
+```
+
+**Never use:**
+```typescript
+// ❌ Avoid object-style props definition
+const props = defineProps({
+  id: {
+    type: String,
+    required: true
+  }
+});
+```
+
+### Type Imports
+Use `import type` for type-only imports:
+```typescript
+import type { Story, Scene, SceneTransition } from '~/server/utils/db';
+```
+
+### Ref Typing
+Properly type refs and reactive data:
+```typescript
+const items = ref<Item[]>([]);
+const loading = ref<boolean>(false);
+const selectedId = ref<string | null>(null);
+```
+
+### Database Types
+Always use types from `~/server/utils/db` for consistency:
+```typescript
+import type { Story, Scene, SceneTransition } from '~/server/utils/db';
+```
+
 ## State Management
 
 ### XState Patterns

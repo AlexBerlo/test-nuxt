@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Story } from '~~/types/api';
+import type { Story } from '~~/server/utils/db';
 
 const { data: stories, refresh } = await useFetch<Story[]>('/api/stories');
 console.log(stories.value);

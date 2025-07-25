@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Story } from '~~/types/api';
+import type { StoryWithRelations } from '~~/types/api';
 
 const route = useRoute();
 const storyId = route.params.id as string;
 
-const { data: story } = await useFetch<Story>(`/api/stories/${storyId}`);
+const { data: story } = await useFetch<StoryWithRelations>(`/api/stories/${storyId}`);
 </script>
 
 <template>

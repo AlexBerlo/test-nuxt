@@ -1,27 +1,38 @@
-<script setup>
+<script setup lang="ts">
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { VueFlow, useVueFlow } from '@vue-flow/core';
 import { MiniMap } from '@vue-flow/minimap';
 import { markRaw, ref, watch } from 'vue';
+import type { Node, Edge } from '@vue-flow/core';
 import SceneNode from './nodes/scene-node.vue';
+import type { StoryWithRelations } from '~~/types/api';
 import { calculateNewNodePosition } from '~/utils/flow-utils';
 
-const props = defineProps({
-  story: {
-    type: Story,
-    required: true
-  }
-});
+interface SceneNodeData {
+  label: string;
+  imageUrl: string | null;
+  progressionOptions: Array<{
+    id: string;
+    text: string;
+    connected: boolean;
+  }>;
+}
 
-const { onConnect, addEdges } = useVueFlow();
+const props = defineProps<{
+  story: StoryWithRelations;
+}>();
 
+const { onConnect, addEdges, removeNodes } = useVueFlow();
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const nodeTypes = {
   'scene-node': markRaw(SceneNode)
-};
+} as any;
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
-const nodes = ref([]);
-const edges = ref([]);
+const nodes = ref<Node<SceneNodeData>[]>([]);
+const edges = ref<Edge[]>([]);
 
 watch(
   () => props.story,
@@ -36,10 +47,10 @@ watch(
         return {
           id: scene.id,
           type: 'scene-node',
-          label: scene.text || 'Scene',
+          label: `Scene ${scene.id.slice(-4)}`,
           position: scene.position || { x: Math.random() * 400, y: Math.random() * 400 },
           data: {
-            label: scene.text || 'Scene',
+            label: `Scene ${scene.id.slice(-4)}`,
             imageUrl: scene.imageUrl,
             progressionOptions: sceneTransitions.map(t => ({
               id: t.id,
@@ -57,7 +68,7 @@ watch(
           .map(transition => ({
             id: transition.id,
             source: transition.sourceSceneId,
-            target: transition.targetSceneId,
+            target: transition.targetSceneId!,
             type: 'default',
             style: {
               stroke: '#374151',
@@ -119,6 +130,12 @@ const handleAddNewNode = () => {
   // Navigate to scene creation
   navigateTo(`/story/scene/new?storyId=${props.story.id}`);
 };
+
+// Handle scene deletion using Vue Flow's removeNodes API
+const handleSceneDeleted = (sceneId: string) => {
+  // Use Vue Flow's removeNodes to properly remove the node from the graph
+  removeNodes(sceneId);
+};
 </script>
 
 <template>
@@ -130,6 +147,12 @@ const handleAddNewNode = () => {
       elevate-edges-on-select
       :node-types="nodeTypes"
     >
+      <template #node-scene-node="nodeProps">
+        <SceneNode
+          v-bind="nodeProps"
+          @scene-deleted="handleSceneDeleted"
+        />
+      </template>
       <MiniMap />
       <Controls />
       <Background />
@@ -139,45 +162,6 @@ const handleAddNewNode = () => {
     <!-- Top-left -->
     <UButton
       class="absolute top-4 left-4 z-10 w-12 h-12 rounded-full shadow-lg"
-      color="primary"
-      variant="solid"
-      @click="handleAddNewNode"
-    >
-      <UIcon
-        name="i-heroicons-plus"
-        class="w-6 h-6"
-      />
-    </UButton>
-
-    <!-- Top-right -->
-    <UButton
-      class="absolute top-4 right-4 z-10 w-12 h-12 rounded-full shadow-lg"
-      color="primary"
-      variant="solid"
-      @click="handleAddNewNode"
-    >
-      <UIcon
-        name="i-heroicons-plus"
-        class="w-6 h-6"
-      />
-    </UButton>
-
-    <!-- Bottom-left -->
-    <UButton
-      class="absolute bottom-4 left-4 z-10 w-12 h-12 rounded-full shadow-lg"
-      color="primary"
-      variant="solid"
-      @click="handleAddNewNode"
-    >
-      <UIcon
-        name="i-heroicons-plus"
-        class="w-6 h-6"
-      />
-    </UButton>
-
-    <!-- Bottom-right -->
-    <UButton
-      class="absolute bottom-4 right-4 z-10 w-12 h-12 rounded-full shadow-lg"
       color="primary"
       variant="solid"
       @click="handleAddNewNode"

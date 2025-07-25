@@ -1,33 +1,13 @@
-export interface Scene {
-  id: string;
-  storyId: string;
-  imageUrl: string | null;
-  text: string | null;
-  position: { x: number; y: number } | null;
-}
-
-export interface SceneTransition {
-  id: string;
-  storyId: string;
-  sourceSceneId: string;
-  targetSceneId: string;
-  optionText: string;
-}
-
-export interface Story {
-  id: string;
-  userId: string;
-  title: string;
-  startSceneId: string;
-  createdAt: string;
-  updatedAt: string;
-  description: string;
-  transitions: SceneTransition[];
-}
+import type { Story, Scene, SceneTransition } from '~~/server/utils/db';
 
 export interface UploadResponse {
   success: boolean;
   url: string;
   filePath: string;
   metaData: Record<string, string>;
+}
+
+export interface StoryWithRelations extends Story {
+  scenes: Scene[];
+  transitions: SceneTransition[];
 }

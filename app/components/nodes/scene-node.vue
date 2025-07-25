@@ -20,9 +20,9 @@ const props = defineProps<{
   isEditing?: boolean;
 }>();
 
-// const emit = defineEmits<{
-//   (e: 'update:data', data: NodeData): void;
-// }>();
+const emit = defineEmits<{
+  'scene-deleted': [sceneId: string];
+}>();
 
 const handleNodeClick = () => {
   if (!props.data.imageUrl) {
@@ -31,6 +31,24 @@ const handleNodeClick = () => {
 };
 
 const hoveredOption = ref<string | null>(null);
+const isDeleteModalOpen = ref(false);
+
+const openDeleteModal = (event: Event) => {
+  event.stopPropagation();
+  isDeleteModalOpen.value = true;
+};
+
+const deleteScene = async () => {
+  try {
+    await $fetch(`/api/scenes/${props.id}`, { method: 'DELETE' });
+    emit('scene-deleted', props.id);
+    isDeleteModalOpen.value = false;
+  }
+  catch (error) {
+    console.error('Failed to delete scene:', error);
+    // TODO: Show error toast
+  }
+};
 </script>
 
 <template>
@@ -115,6 +133,19 @@ const hoveredOption = ref<string | null>(null);
       </template>
     </template>
 
+    <!-- Delete Button -->
+    <UButton
+      class="absolute top-2 right-2 w-8 h-8 rounded-full shadow-lg"
+      color="error"
+      variant="solid"
+      @click="openDeleteModal"
+    >
+      <UIcon
+        name="i-heroicons-trash"
+        class="w-4 h-4"
+      />
+    </UButton>
+
     <!-- Target handle for receiving connections -->
     <Handle
       id="target"
@@ -128,4 +159,27 @@ const hoveredOption = ref<string | null>(null);
       }"
     />
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <UModal
+    v-model:open="isDeleteModalOpen"
+    title="Confirm Scene Deletion"
+  >
+    <template #body>
+      <p>Are you sure you want to delete this scene? This action cannot be undone and will remove all connections to this scene.</p>
+      <div class="flex justify-end gap-2 mt-4">
+        <UButton
+          label="Cancel"
+          color="secondary"
+          variant="ghost"
+          @click="isDeleteModalOpen = false"
+        />
+        <UButton
+          label="Delete"
+          color="error"
+          @click="deleteScene"
+        />
+      </div>
+    </template>
+  </UModal>
 </template>
