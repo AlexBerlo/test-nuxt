@@ -40,12 +40,22 @@ useSeoMeta({
         </NuxtLink>
       </div>
       <div class="flex items-center gap-3">
-        <NuxtLink to="/story">
-          Stories
-        </NuxtLink>
-        <NuxtLink to="/images-list">
-          Image gallery
-        </NuxtLink>
+        <template v-if="loggedIn">
+          <NuxtLink to="/story">
+            Stories
+          </NuxtLink>
+          <NuxtLink to="/images-list">
+            Image gallery
+          </NuxtLink>
+        </template>
+        <template v-else>
+          <NuxtLink>
+            Login
+          </NuxtLink>
+          <NuxtLink>
+            Register
+          </NuxtLink>
+        </template>
         <UButton
           square
           variant="ghost"
