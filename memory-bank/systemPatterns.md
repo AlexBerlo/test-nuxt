@@ -145,3 +145,75 @@ stateDiagram-v2
      duration: number;
      timestamp: string;
    }
+   ```
+
+## API Structure
+
+### Story Management Endpoints
+```typescript
+// Story CRUD operations
+POST   /api/stories          // Create new story
+GET    /api/stories          // List user stories
+GET    /api/stories/:id      // Get story with scenes/transitions
+PUT    /api/stories/:id      // Update story (including publish)
+DELETE /api/stories/:id      // Delete story
+
+// Scene operations
+POST   /api/scenes           // Create new scene
+GET    /api/scenes/:id       // Get scene details
+PUT    /api/scenes/:id       // Update scene
+DELETE /api/scenes/:id       // Delete scene
+
+// Scene transitions
+PUT    /api/scene-transitions/:id  // Update transition target
+```
+
+### Publishing System
+```typescript
+// Publish story request
+PUT /api/stories/:id
+{
+  "published": true
+}
+
+// Story model with publish field
+interface Story {
+  id: string;
+  userId: string;
+  title: string;
+  description?: string;
+  startSceneId?: string;
+  published: boolean;      // New field
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+## Database Schema Updates
+
+### Stories Table Enhancement
+```sql
+-- Updated stories table with publish field
+CREATE TABLE stories (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  title TEXT(50) NOT NULL,
+  description TEXT(255),
+  start_scene_id TEXT,
+  published INTEGER NOT NULL DEFAULT 0,  -- New boolean field
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+```
+
+### Publishing Workflow
+```mermaid
+sequenceDiagram
+    Creator->>UI: Click "Publish Story"
+    UI->>Creator: Show confirmation modal
+    Creator->>UI: Confirm publish
+    UI->>API: PUT /api/stories/:id {published: true}
+    API->>DB: Verify story ownership
+    API->>DB: Update published = true
+    API->>UI: Return success
+    UI->>Creator: Show published state

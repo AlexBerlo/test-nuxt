@@ -7,6 +7,7 @@ export const stories = sqliteTable('stories', {
   title: text('title', { length: 50 }).notNull(),
   description: text('description', { length: 255 }),
   startSceneId: text('start_scene_id'), // Foreign key to scenes table
+  published: integer('published', { mode: 'boolean' }).notNull().default(false),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull()
 });

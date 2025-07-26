@@ -136,40 +136,108 @@ const handleSceneDeleted = (sceneId: string) => {
   // Use Vue Flow's removeNodes to properly remove the node from the graph
   removeNodes(sceneId);
 };
+
+// Handle publish story functionality
+const isPublishModalOpen = ref(false);
+
+const openPublishModal = () => {
+  isPublishModalOpen.value = true;
+};
+
+const publishStory = async () => {
+  try {
+    const response = await fetch(`/api/stories/${props.story.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        published: true
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to publish story');
+    }
+
+    isPublishModalOpen.value = false;
+    // TODO: Show success toast
+    console.log('Story published successfully');
+  }
+  catch (error) {
+    console.error('Failed to publish story:', error);
+    // TODO: Show error toast
+  }
+};
 </script>
 
 <template>
-  <div class="container h-300 w-500 border-amber-400 border-2 relative">
-    <VueFlow
-      :nodes="nodes"
-      :edges="edges"
-      fit-view-on-init
-      elevate-edges-on-select
-      :node-types="nodeTypes"
-    >
-      <template #node-scene-node="nodeProps">
-        <SceneNode
-          v-bind="nodeProps"
-          @scene-deleted="handleSceneDeleted"
-        />
-      </template>
-      <MiniMap />
-      <Controls />
-      <Background />
-    </VueFlow>
-
-    <!-- Add New Node Buttons - All 4 corners -->
-    <!-- Top-left -->
-    <UButton
-      class="absolute top-4 left-4 z-10 w-12 h-12 rounded-full shadow-lg"
-      color="primary"
-      variant="solid"
-      @click="handleAddNewNode"
-    >
-      <UIcon
-        name="i-heroicons-plus"
-        class="w-6 h-6"
+  <div class="relative">
+    <!-- Publish Story Button -->
+    <div class="mb-4">
+      <UButton
+        label="Publish Story"
+        color="success"
+        variant="solid"
+        @click="openPublishModal"
       />
-    </UButton>
+    </div>
+
+    <div class="container h-300 w-500 border-amber-400 border-2 relative">
+      <VueFlow
+        :nodes="nodes"
+        :edges="edges"
+        fit-view-on-init
+        elevate-edges-on-select
+        :node-types="nodeTypes"
+      >
+        <template #node-scene-node="nodeProps">
+          <SceneNode
+            v-bind="nodeProps"
+            @scene-deleted="handleSceneDeleted"
+          />
+        </template>
+        <MiniMap />
+        <Controls />
+        <Background />
+      </VueFlow>
+
+      <!-- Add New Node Buttons - All 4 corners -->
+      <!-- Top-left -->
+      <UButton
+        class="absolute top-4 left-4 z-10 w-12 h-12 rounded-full shadow-lg"
+        color="primary"
+        variant="solid"
+        @click="handleAddNewNode"
+      >
+        <UIcon
+          name="i-heroicons-plus"
+          class="w-6 h-6"
+        />
+      </UButton>
+    </div>
+
+    <!-- Publish Confirmation Modal -->
+    <UModal
+      v-model:open="isPublishModalOpen"
+      title="Publish Story"
+    >
+      <template #body>
+        <p>Publishing your story will make it public to the world. Are you sure you want to proceed?</p>
+        <div class="flex justify-end gap-2 mt-4">
+          <UButton
+            label="Cancel"
+            color="secondary"
+            variant="ghost"
+            @click="isPublishModalOpen = false"
+          />
+          <UButton
+            label="Publish"
+            color="success"
+            @click="publishStory"
+          />
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>

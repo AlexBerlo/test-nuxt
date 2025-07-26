@@ -163,6 +163,53 @@ import type { Story, Scene, SceneTransition } from '~/server/utils/db';
    ORDER BY day DESC
    ```
 
+### Schema Evolution
+1. **Adding Boolean Fields**
+   ```typescript
+   // In schema.ts - use integer with boolean mode
+   published: integer('published', { mode: 'boolean' }).notNull().default(false)
+   
+   // Generate migration with drizzle-kit
+   npx drizzle-kit generate
+   ```
+
+2. **API Update Patterns**
+   ```typescript
+   // Always verify ownership before updates
+   const story = await useDB()
+     .select()
+     .from(tables.stories)
+     .where(eq(tables.stories.id, storyId))
+     .get();
+
+   if (story?.userId !== String(user.id)) {
+     throw createError({
+       statusCode: 403,
+       message: 'Forbidden'
+     });
+   }
+   ```
+
+3. **Database Transactions**
+   ```typescript
+   // Use batch() for operations requiring database transactions
+   // Ensures all operations succeed together or fail together
+   const deletedStory = await useDB().batch([
+     useDB().delete(tables.sceneTransitions).where(eq(tables.sceneTransitions.storyId, id)),
+     useDB().delete(tables.scenes).where(eq(tables.scenes.storyId, id)),
+     useDB().delete(tables.stories).where(and(
+       eq(tables.stories.id, id),
+       eq(tables.stories.userId, String(user.id))
+     ))
+   ]);
+
+   // Always use batch() when:
+   // - Deleting related records across multiple tables
+   // - Creating records that depend on each other
+   // - Updating multiple related entities
+   // - Any operation requiring atomicity
+   ```
+
 ## UI/UX Guidelines
 
 ### Tailwind Utility Classes

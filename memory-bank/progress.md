@@ -39,6 +39,13 @@
    - Position saving
    - Preview mode
 
+3. **Story Publishing**
+   - Database schema updated with `published` field
+   - PUT endpoint for story updates
+   - Publish button in editor interface
+   - Confirmation modal implementation
+   - User ownership verification
+
 ## In Progress
 
 ### Active Development

@@ -43,6 +43,13 @@
    - Route protection
    - User context
 
+4. **Story Publishing System**
+   - Added `published` boolean field to stories table
+   - Created PUT endpoint for story updates (`/api/stories/[id]`)
+   - Implemented publish story button in main-flow.vue
+   - Added confirmation modal with user-friendly messaging
+   - Database migration generated and applied
+
 ## Active Decisions
 
 ### Technical Choices

@@ -15,6 +15,13 @@
       "when": 1753383981842,
       "tag": "0001_fair_plazm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1753538746019,
+      "tag": "0002_demonic_microchip",
+      "breakpoints": true
     }
   ]
 }
